@@ -1,195 +1,115 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+<link rel="icon" type="image/png" href="/9FE48824-F164-44F5-BB6B-D4C6E50FA1C0-modified.png">
 <meta charset="UTF-8">
 <title>Arcadium OS</title>
+
+<!-- Bubble Font -->
+<link href="https://fonts.googleapis.com/css2?family=Fredoka+One&display=swap" rel="stylesheet">
 
 <style>
     /* PAGE BACKGROUND */
     body {
         margin: 0;
-        font-family: "Segoe UI", sans-serif;
         background: linear-gradient(135deg, #3aa9ff, #61e0c8);
+        font-family: 'Fredoka One', cursive;
         user-select: none;
         overflow-x: hidden;
     }
 
-    /* TOP BAR */
+    /* PAGE HEADER */
+    header {
+        text-align: center;
+        font-size: 54px;
+        color: white;
+        letter-spacing: 3px;
+        text-shadow: 0 5px 20px rgba(0,0,0,0.4);
+        margin-top: 40px;
+    }
+
+    /* TOP NAVIGATION BAR */
     .topbar {
         width: 90%;
         margin: 30px auto;
         padding: 20px;
         background: rgba(255,255,255,0.18);
         border-radius: 40px;
-        box-shadow: 0 8px 30px rgba(0,0,0,0.3);
-        backdrop-filter: blur(14px);
+        backdrop-filter: blur(15px);
+        border: 2px solid rgba(255,255,255,0.35);
+        box-shadow: 0 10px 35px rgba(0,0,0,0.3);
         display: flex;
-        justify-content: space-between;
-        align-items: center;
-        border: 2px solid rgba(255,255,255,0.3);
-    }
-
-    .topbar-left,
-    .topbar-right {
-        display: flex;
-        gap: 25px;
-        padding: 5px 20px;
-    }
-
-    /* TOP BAR ICON PLACEHOLDERS */
-    .icon-placeholder {
-        width: 64px;
-        height: 64px;
-        background: rgba(255,255,255,0.35);
-        border-radius: 20px;
-        box-shadow: inset 0 0 12px rgba(0,0,0,0.25);
-        display: flex;
-        align-items: center;
         justify-content: center;
-        font-size: 26px;
-        color: #00000055;
-        backdrop-filter: blur(6px);
+        gap: 35px;
+    }
+
+    /* NAV BUTTONS */
+    .nav-item {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
         cursor: pointer;
         transition: 0.2s;
+        text-decoration: none;
+        color: white;
     }
-    .icon-placeholder:hover {
+
+    .nav-item img {
+        width: 70px;
+        height: 70px;
+        border-radius: 22px;
+        background: rgba(255,255,255,0.35);
+        box-shadow: inset 0 0 12px rgba(0,0,0,0.25);
+        backdrop-filter: blur(6px);
+        margin-bottom: 10px;
+        transition: 0.2s;
+    }
+
+    .nav-item:hover img {
         transform: scale(1.08);
         background: rgba(255,255,255,0.55);
     }
 
-    /* PAGE HEADER */
-    header {
-        text-align: center;
-        font-size: 60px;
-        font-weight: bold;
-        color: white;
-        text-shadow: 0 5px 20px rgba(0,0,0,0.4);
-        margin-top: 60px;
-        letter-spacing: 3px;
+    .nav-item span {
+        font-size: 18px;
+        text-shadow: 0px 0px 8px rgba(0,0,0,0.4);
     }
-
-    /* CONTENT GRID */
-    .grid {
-        width: 90%;
-        margin: 60px auto;
-        display: grid;
-        grid-template-columns: repeat(5, 1fr);
-        gap: 30px;
-    }
-
-    /* CONTENT BOXES */
-    .box {
-        background: rgba(255,255,255,0.25);
-        border-radius: 25px;
-        padding: 20px;
-        backdrop-filter: blur(10px);
-        box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-        transition: 0.2s;
-        cursor: pointer;
-        border: 2px solid rgba(255,255,255,0.35);
-    }
-
-    .box:hover {
-        transform: translateY(-5px);
-        background: rgba(255,255,255,0.45);
-    }
-
-    /* BOX IMAGE PLACEHOLDER */
-    .box .img {
-        width: 100%;
-        height: 160px;
-        background: rgba(0,0,0,0.20);
-        border-radius: 18px;
-        margin-bottom: 15px;
-        box-shadow: inset 0 0 10px rgba(0,0,0,0.4);
-    }
-
-    .box h3 {
-        font-size: 20px;
-        color: white;
-        text-shadow: 0 0 6px rgba(0,0,0,0.6);
-        text-align: center;
-        margin: 0;
-    }
-
 </style>
 </head>
 <body>
 
 <header>Arcadium OS</header>
 
-<!-- TOP BAR -->
+<!-- 🔥 TOP NAVIGATION MENU -->
+<!-- ▸ Replace href="#" with REAL hyperlinks -->
+<!-- ▸ Replace src="..." with REAL image URLs -->
 <div class="topbar">
-    
-    <div class="topbar-left">
-        <!-- icon placeholders (replace later with real images) -->
-        <div class="icon-placeholder">+</div>
-        <div class="icon-placeholder">+</div>
-        <div class="icon-placeholder">+</div>
-        <div class="icon-placeholder">+</div>
-        <div class="icon-placeholder">+</div>
-    </div>
 
-    <div class="topbar-right">
-        <div class="icon-placeholder">+</div>
-        <div class="icon-placeholder">+</div>
-        <div class="icon-placeholder">+</div>
-    </div>
+    <a class="nav-item" href="#">
+        <img src="IMAGE_URL_HERE">
+        <span>Home</span>
+    </a>
 
-</div>
+    <a class="nav-item" href="#">
+        <img src="IMAGE_URL_HERE">
+        <span>Games</span>
+    </a>
 
-<!-- CONTENT GRID -->
-<div class="grid">
-    <!-- 10 boxes -->
-    <div class="box">
-        <div class="img"></div>
-        <h3>Placeholder One</h3>
-    </div>
+    <a class="nav-item" href="#">
+        <img src="IMAGE_URL_HERE">
+        <span>Projects</span>
+    </a>
 
-    <div class="box">
-        <div class="img"></div>
-        <h3>Placeholder Two</h3>
-    </div>
+    <a class="nav-item" href="#">
+        <img src="IMAGE_URL_HERE">
+        <span>Gallery</span>
+    </a>
 
-    <div class="box">
-        <div class="img"></div>
-        <h3>Placeholder Three</h3>
-    </div>
+    <a class="nav-item" href="#">
+        <img src="IMAGE_URL_HERE">
+        <span>About</span>
+    </a>
 
-    <div class="box">
-        <div class="img"></div>
-        <h3>Placeholder Four</h3>
-    </div>
-
-    <div class="box">
-        <div class="img"></div>
-        <h3>Placeholder Five</h3>
-    </div>
-
-    <div class="box">
-        <div class="img"></div>
-        <h3>Placeholder Six</h3>
-    </div>
-
-    <div class="box">
-        <div class="img"></div>
-        <h3>Placeholder Seven</h3>
-    </div>
-
-    <div class="box">
-        <div class="img"></div>
-        <h3>Placeholder Eight</h3>
-    </div>
-
-    <div class="box">
-        <div class="img"></div>
-        <h3>Placeholder Nine</h3>
-    </div>
-
-    <div class="box">
-        <div class="img"></div>
-        <h3>Placeholder Ten</h3>
-    </div>
 </div>
 
 </body>

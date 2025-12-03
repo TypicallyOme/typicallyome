@@ -1,0 +1,823 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Funky Games</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Orbitron:wght@400;500;600;700;800&family=Quicksand:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Quicksand', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #ffffff;
+            overflow-x: hidden;
+            min-height: 100vh;
+        }
+
+        .vanta-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+        }
+
+        /* Apple Mac App Navigation */
+        .mac-dock {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(255, 255, 255, 0.25);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 25px;
+            padding: 12px 20px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            z-index: 1000;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease;
+        }
+
+        .dock-item {
+            width: 60px;
+            height: 60px;
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            color: white;
+            text-decoration: none;
+            font-size: 1.5rem;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .dock-item:hover {
+            transform: scale(1.15) translateY(-8px);
+            background: rgba(255, 255, 255, 0.4);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
+        }
+
+        .dock-item.active {
+            background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
+            box-shadow: 0 0 30px rgba(255, 107, 107, 0.5);
+        }
+
+        .dock-item::after {
+            content: attr(data-label);
+            position: absolute;
+            bottom: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0, 0, 0, 0.8);
+            color: white;
+            padding: 8px 12px;
+            border-radius: 8px;
+            font-size: 0.8rem;
+            white-space: nowrap;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s;
+            margin-bottom: 15px;
+            font-family: 'Inter', sans-serif;
+            font-weight: 500;
+        }
+
+        .dock-item:hover::after {
+            opacity: 1;
+        }
+
+        /* Main Content */
+        .main-content {
+            padding: 6rem 2rem 8rem;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .page-title {
+            font-family: 'Quicksand', sans-serif;
+            font-size: 4rem;
+            text-align: center;
+            margin-bottom: 3rem;
+            background: linear-gradient(45deg, #ff6b6b, #4ecdc4, #45b7d1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-weight: 700;
+            letter-spacing: -1px;
+        }
+
+        /* Game Categories */
+        .game-categories {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            margin-bottom: 3rem;
+            flex-wrap: wrap;
+        }
+
+        .category-btn {
+            background: rgba(255, 255, 255, 0.2);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            color: white;
+            padding: 1rem 2rem;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+            font-family: 'Quicksand', sans-serif;
+            font-size: 1rem;
+            letter-spacing: 0.5px;
+        }
+
+        .category-btn:hover,
+        .category-btn.active {
+            background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
+            border-color: rgba(255, 255, 255, 0.5);
+            box-shadow: 0 10px 25px rgba(255, 107, 107, 0.3);
+            transform: translateY(-2px);
+        }
+
+        /* Games Grid */
+        .games-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 2rem;
+            margin-bottom: 4rem;
+        }
+
+        .game-card {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(20px);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 25px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .game-card:hover {
+            transform: translateY(-15px) scale(1.02);
+            border-color: rgba(255, 255, 255, 0.5);
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.2);
+        }
+
+        .game-image {
+            width: 100%;
+            height: 200px;
+            background: linear-gradient(45deg, #ff6b6b, #4ecdc4, #45b7d1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3.5rem;
+            color: white;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .game-image::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(45deg, transparent 30%, rgba(255,255,255,0.1) 50%, transparent 70%);
+            transform: translateX(-100%);
+            transition: transform 0.6s;
+        }
+
+        .game-card:hover .game-image::before {
+            transform: translateX(100%);
+        }
+
+        .game-content {
+            padding: 2rem;
+        }
+
+        .game-title {
+            font-size: 1.4rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-family: 'Quicksand', sans-serif;
+        }
+
+        .game-description {
+            opacity: 0.9;
+            font-size: 1rem;
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+            font-weight: 400;
+        }
+
+        .game-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .game-rating {
+            display: flex;
+            gap: 0.3rem;
+            color: #ffd700;
+            font-size: 1.1rem;
+        }
+
+        .game-category {
+            background: rgba(255, 107, 107, 0.2);
+            color: #ff6b6b;
+            padding: 0.4rem 1rem;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            border: 1px solid rgba(255, 107, 107, 0.3);
+        }
+
+        .play-button {
+            width: 100%;
+            background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
+            border: none;
+            padding: 1rem;
+            border-radius: 15px;
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            font-family: 'Quicksand', sans-serif;
+            font-size: 1.1rem;
+            letter-spacing: 0.5px;
+        }
+
+        .play-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 30px rgba(255, 107, 107, 0.4);
+        }
+
+        /* Featured Game */
+        .featured-game {
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(20px);
+            border: 2px solid rgba(255, 255, 255, 0.4);
+            border-radius: 30px;
+            padding: 3rem;
+            margin-bottom: 4rem;
+            text-align: center;
+        }
+
+        .featured-title {
+            font-family: 'Quicksand', sans-serif;
+            font-size: 2.5rem;
+            margin-bottom: 1.5rem;
+            background: linear-gradient(45deg, #ff6b6b, #4ecdc4, #45b7d1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-weight: 700;
+        }
+
+        .featured-description {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            margin-bottom: 2rem;
+            line-height: 1.6;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .featured-button {
+            background: linear-gradient(45deg, #45b7d1, #96ceb4);
+            border: none;
+            padding: 1.2rem 2.5rem;
+            border-radius: 50px;
+            color: white;
+            font-size: 1.2rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 15px 35px rgba(69, 183, 209, 0.3);
+            font-family: 'Quicksand', sans-serif;
+            letter-spacing: 0.5px;
+        }
+
+        .featured-button:hover {
+            transform: translateY(-5px) scale(1.05);
+            box-shadow: 0 25px 50px rgba(69, 183, 209, 0.4);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .mac-dock {
+                bottom: 10px;
+                padding: 10px 15px;
+                gap: 12px;
+            }
+            
+            .dock-item {
+                width: 50px;
+                height: 50px;
+                font-size: 1.3rem;
+            }
+
+            .page-title {
+                font-size: 2.5rem;
+            }
+
+            .games-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .game-categories {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .main-content {
+                padding: 4rem 1rem 8rem;
+            }
+        }
+
+        /* Floating Animation */
+        .floating {
+            animation: float 6s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+        }
+
+        /* Bubble Effect */
+        .bubble {
+            position: absolute;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            pointer-events: none;
+            animation: bubble-float 8s infinite ease-in-out;
+        }
+
+        @keyframes bubble-float {
+            0% { transform: translateY(100vh) scale(0); opacity: 0; }
+            10% { opacity: 1; }
+            90% { opacity: 1; }
+            100% { transform: translateY(-100px) scale(1); opacity: 0; }
+        }
+    </style>
+</head>
+<body>
+    <div class="vanta-bg" id="vanta-bg"></div>
+
+    <!-- Apple Mac App Navigation -->
+    <nav class="mac-dock">
+        <a href="index.html" class="dock-item" data-label="🏠 Home">
+            <i class="fas fa-home"></i>
+        </a>
+        <a href="games.html" class="dock-item active" data-label="🎮 Games">
+            <i class="fas fa-gamepad"></i>
+        </a>
+        <a href="proxies.html" class="dock-item" data-label="🔒 Proxies">
+            <i class="fas fa-shield-alt"></i>
+        </a>
+        <a href="music.html" class="dock-item" data-label="🎵 Music">
+            <i class="fas fa-music"></i>
+        </a>
+        <a href="movies.html" class="dock-item" data-label="🎬 Movies">
+            <i class="fas fa-film"></i>
+        </a>
+        <a href="game-sites.html" class="dock-item" data-label="🌐 Game Sites">
+            <i class="fas fa-globe"></i>
+        </a>
+        <a href="website.html" class="dock-item" data-label="💻 Website">
+            <i class="fas fa-code"></i>
+        </a>
+        <a href="soundboard.html" class="dock-item" data-label="🔊 Soundboard">
+            <i class="fas fa-volume-up"></i>
+        </a>
+        <a href="chat.html" class="dock-item" data-label="💬 Chat">
+            <i class="fas fa-comments"></i>
+        </a>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <h1 class="page-title floating">Gaming Universe</h1>
+
+        <!-- Featured Game -->
+        <div class="featured-game">
+            <h2 class="featured-title">🚀 Featured: Cyber Nexus 2099</h2>
+            <p class="featured-description">
+                Experience the ultimate cyberpunk adventure in this groundbreaking RPG. 
+                Explore a vast neon-lit metropolis, customize your character with advanced cybernetics, 
+                and uncover the dark secrets of a dystopian future.
+            </p>
+            <button class="featured-button">
+                <i class="fas fa-rocket"></i>
+                Play Now
+            </button>
+        </div>
+
+        <!-- Game Categories -->
+        <div class="game-categories">
+            <button class="category-btn active" data-category="all">All Games</button>
+            <button class="category-btn" data-category="action">Action</button>
+            <button class="category-btn" data-category="adventure">Adventure</button>
+            <button class="category-btn" data-category="puzzle">Puzzle</button>
+            <button class="category-btn" data-category="racing">Racing</button>
+            <button class="category-btn" data-category="strategy">Strategy</button>
+        </div>
+
+        <!-- Games Grid -->
+        <div class="games-grid" id="gamesGrid">
+            <!-- Action Games -->
+            <div class="game-card" data-category="action">
+                <div class="game-image">
+                    <i class="fas fa-bolt"></i>
+                </div>
+                <div class="game-content">
+                    <h3 class="game-title">Neon Strike</h3>
+                    <p class="game-description">Fast-paced FPS with cyberpunk aesthetics and intense multiplayer battles.</p>
+                    <div class="game-meta">
+                        <div class="game-rating">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                        </div>
+                        <span class="game-category">Action</span>
+                    </div>
+                    <button class="play-button">
+                        <i class="fas fa-play"></i>
+                        Play Now
+                    </button>
+                </div>
+            </div>
+
+            <div class="game-card" data-category="action">
+                <div class="game-image">
+                    <i class="fas fa-fist-raised"></i>
+                </div>
+                <div class="game-content">
+                    <h3 class="game-title">Street Fighter X</h3>
+                    <p class="game-description">Legendary fighting game with enhanced graphics and new combat mechanics.</p>
+                    <div class="game-meta">
+                        <div class="game-rating">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="far fa-star"></i>
+                        </div>
+                        <span class="game-category">Action</span>
+                    </div>
+                    <button class="play-button">
+                        <i class="fas fa-play"></i>
+                        Play Now
+                    </button>
+                </div>
+            </div>
+
+            <!-- Adventure Games -->
+            <div class="game-card" data-category="adventure">
+                <div class="game-image">
+                    <i class="fas fa-map"></i>
+                </div>
+                <div class="game-content">
+                    <h3 class="game-title">Quest of Legends</h3>
+                    <p class="game-description">Epic fantasy adventure with vast open world and immersive storytelling.</p>
+                    <div class="game-meta">
+                        <div class="game-rating">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                        </div>
+                        <span class="game-category">Adventure</span>
+                    </div>
+                    <button class="play-button">
+                        <i class="fas fa-play"></i>
+                        Play Now
+                    </button>
+                </div>
+            </div>
+
+            <div class="game-card" data-category="adventure">
+                <div class="game-image">
+                    <i class="fas fa-compass"></i>
+                </div>
+                <div class="game-content">
+                    <h3 class="game-title">Lost Ruins</h3>
+                    <p class="game-description">Explore ancient temples and solve mysteries in this archaeological adventure.</p>
+                    <div class="game-meta">
+                        <div class="game-rating">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="far fa-star"></i>
+                        </div>
+                        <span class="game-category">Adventure</span>
+                    </div>
+                    <button class="play-button">
+                        <i class="fas fa-play"></i>
+                        Play Now
+                    </button>
+                </div>
+            </div>
+
+            <!-- Puzzle Games -->
+            <div class="game-card" data-category="puzzle">
+                <div class="game-image">
+                    <i class="fas fa-puzzle-piece"></i>
+                </div>
+                <div class="game-content">
+                    <h3 class="game-title">Mind Bender</h3>
+                    <p class="game-description">Challenge your intellect with increasingly complex puzzles and brain teasers.</p>
+                    <div class="game-meta">
+                        <div class="game-rating">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                        </div>
+                        <span class="game-category">Puzzle</span>
+                    </div>
+                    <button class="play-button">
+                        <i class="fas fa-play"></i>
+                        Play Now
+                    </button>
+                </div>
+            </div>
+
+            <div class="game-card" data-category="puzzle">
+                <div class="game-image">
+                    <i class="fas fa-cube"></i>
+                </div>
+                <div class="game-content">
+                    <h3 class="game-title">Quantum Blocks</h3>
+                    <p class="game-description">Manipulate quantum particles to solve mind-bending spatial puzzles.</p>
+                    <div class="game-meta">
+                        <div class="game-rating">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="far fa-star"></i>
+                        </div>
+                        <span class="game-category">Puzzle</span>
+                    </div>
+                    <button class="play-button">
+                        <i class="fas fa-play"></i>
+                        Play Now
+                    </button>
+                </div>
+            </div>
+
+            <!-- Racing Games -->
+            <div class="game-card" data-category="racing">
+                <div class="game-image">
+                    <i class="fas fa-car"></i>
+                </div>
+                <div class="game-content">
+                    <h3 class="game-title">Neon Racer</h3>
+                    <p class="game-description">High-speed racing through neon-lit cityscapes with customizable vehicles.</p>
+                    <div class="game-meta">
+                        <div class="game-rating">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="far fa-star"></i>
+                        </div>
+                        <span class="game-category">Racing</span>
+                    </div>
+                    <button class="play-button">
+                        <i class="fas fa-play"></i>
+                        Play Now
+                    </button>
+                </div>
+            </div>
+
+            <div class="game-card" data-category="racing">
+                <div class="game-image">
+                    <i class="fas fa-motorcycle"></i>
+                </div>
+                <div class="game-content">
+                    <h3 class="game-title">Speed Demon</h3>
+                    <p class="game-description">Extreme motorcycle racing with stunts and challenging tracks.</p>
+                    <div class="game-meta">
+                        <div class="game-rating">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                        </div>
+                        <span class="game-category">Racing</span>
+                    </div>
+                    <button class="play-button">
+                        <i class="fas fa-play"></i>
+                        Play Now
+                    </button>
+                </div>
+            </div>
+
+            <!-- Strategy Games -->
+            <div class="game-card" data-category="strategy">
+                <div class="game-image">
+                    <i class="fas fa-chess"></i>
+                </div>
+                <div class="game-content">
+                    <h3 class="game-title">Battle Tactics</h3>
+                    <p class="game-description">Command armies in epic battles with deep strategic gameplay.</p>
+                    <div class="game-meta">
+                        <div class="game-rating">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="far fa-star"></i>
+                        </div>
+                        <span class="game-category">Strategy</span>
+                    </div>
+                    <button class="play-button">
+                        <i class="fas fa-play"></i>
+                        Play Now
+                    </button>
+                </div>
+            </div>
+
+            <div class="game-card" data-category="strategy">
+                <div class="game-image">
+                    <i class="fas fa-city"></i>
+                </div>
+                <div class="game-content">
+                    <h3 class="game-title">Empire Builder</h3>
+                    <p class="game-description">Build and manage your own civilization from scratch.</p>
+                    <div class="game-meta">
+                        <div class="game-rating">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                        </div>
+                        <span class="game-category">Strategy</span>
+                    </div>
+                    <button class="play-button">
+                        <i class="fas fa-play"></i>
+                        Play Now
+                    </button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Floating Bubbles -->
+    <div id="bubbles-container"></div>
+
+    <script>
+        // Initialize Vanta.js background
+        VANTA.NET({
+            el: "#vanta-bg",
+            mouseControls: true,
+            touchControls: true,
+            gyroControls: false,
+            minHeight: 200.00,
+            minWidth: 200.00,
+            scale: 1.00,
+            scaleMobile: 1.00,
+            color: 0xff6b6b,
+            backgroundColor: 0x667eea,
+            points: 8.00,
+            maxDistance: 25.00,
+            spacing: 18.00
+        });
+
+        // Create floating bubbles
+        function createBubbles() {
+            const container = document.getElementById('bubbles-container');
+            const bubbleCount = 12;
+
+            for (let i = 0; i < bubbleCount; i++) {
+                const bubble = document.createElement('div');
+                bubble.className = 'bubble';
+                bubble.style.left = Math.random() * 100 + '%';
+                bubble.style.width = (Math.random() * 20 + 10) + 'px';
+                bubble.style.height = bubble.style.width;
+                bubble.style.animationDelay = Math.random() * 8 + 's';
+                bubble.style.animationDuration = (Math.random() * 4 + 6) + 's';
+                container.appendChild(bubble);
+            }
+        }
+
+        // Enhanced dock interactions
+        const dockItems = document.querySelectorAll('.dock-item');
+        
+        dockItems.forEach(item => {
+            item.addEventListener('mouseenter', function() {
+                this.style.transform = 'scale(1.15) translateY(-8px)';
+            });
+            
+            item.addEventListener('mouseleave', function() {
+                if (!this.classList.contains('active')) {
+                    this.style.transform = 'scale(1) translateY(0)';
+                }
+            });
+        });
+
+        // Game filtering
+        const categoryBtns = document.querySelectorAll('.category-btn');
+        const gameCards = document.querySelectorAll('.game-card');
+
+        categoryBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                // Update active button
+                categoryBtns.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+
+                const category = btn.dataset.category;
+                
+                // Filter games
+                gameCards.forEach(card => {
+                    if (category === 'all' || card.dataset.category === category) {
+                        card.style.display = 'block';
+                        card.style.animation = 'fadeIn 0.5s ease';
+                    } else {
+                        card.style.display = 'none';
+                    }
+                });
+            });
+        });
+
+        // Play button functionality
+        document.querySelectorAll('.play-button, .featured-button').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const originalText = this.innerHTML;
+                this.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Loading...';
+                this.disabled = true;
+                
+                setTimeout(() => {
+                    this.innerHTML = '<i class="fas fa-check"></i> Launching Game...';
+                    setTimeout(() => {
+                        this.innerHTML = originalText;
+                        this.disabled = false;
+                        alert('Game would launch here in a real implementation!');
+                    }, 1500);
+                }, 2000);
+            });
+        });
+
+        // Add fade in animation
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes fadeIn {
+                from { opacity: 0; transform: translateY(20px); }
+                to { opacity: 1; transform: translateY(0); }
+            }
+        `;
+        document.head.appendChild(style);
+
+        // Initialize bubbles
+        createBubbles();
+
+        // Add sparkle effect on hover
+        document.querySelectorAll('.game-card, .feature-card').forEach(card => {
+            card.addEventListener('mouseenter', function() {
+                this.style.transform += ' rotate(1deg)';
+            });
+            
+            card.addEventListener('mouseleave', function() {
+                this.style.transform = this.style.transform.replace(' rotate(1deg)', '');
+            });
+        });
+    </script>
+</body>
+</html>

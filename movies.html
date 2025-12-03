@@ -1,0 +1,840 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Funky Movies</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Orbitron:wght@400;500;600;700;800&family=Quicksand:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Quicksand', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #ffffff;
+            overflow-x: hidden;
+            min-height: 100vh;
+        }
+
+        .vanta-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+        }
+
+        /* Apple Mac App Navigation */
+        .mac-dock {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(255, 255, 255, 0.25);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 25px;
+            padding: 12px 20px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            z-index: 1000;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease;
+        }
+
+        .dock-item {
+            width: 60px;
+            height: 60px;
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            color: white;
+            text-decoration: none;
+            font-size: 1.5rem;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .dock-item:hover {
+            transform: scale(1.15) translateY(-8px);
+            background: rgba(255, 255, 255, 0.4);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
+        }
+
+        .dock-item.active {
+            background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
+            box-shadow: 0 0 30px rgba(255, 107, 107, 0.5);
+        }
+
+        .dock-item::after {
+            content: attr(data-label);
+            position: absolute;
+            bottom: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0, 0, 0, 0.8);
+            color: white;
+            padding: 8px 12px;
+            border-radius: 8px;
+            font-size: 0.8rem;
+            white-space: nowrap;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s;
+            margin-bottom: 15px;
+            font-family: 'Inter', sans-serif;
+            font-weight: 500;
+        }
+
+        .dock-item:hover::after {
+            opacity: 1;
+        }
+
+        /* Main Content */
+        .main-content {
+            padding: 6rem 2rem 8rem;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .page-title {
+            font-family: 'Quicksand', sans-serif;
+            font-size: 4rem;
+            text-align: center;
+            margin-bottom: 3rem;
+            background: linear-gradient(45deg, #ff6b6b, #4ecdc4, #45b7d1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-weight: 700;
+            letter-spacing: -1px;
+        }
+
+        /* Featured Movie */
+        .featured-movie {
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(20px);
+            border: 2px solid rgba(255, 255, 255, 0.4);
+            border-radius: 30px;
+            padding: 3rem;
+            margin-bottom: 4rem;
+            text-align: center;
+        }
+
+        .movie-poster {
+            width: 200px;
+            height: 300px;
+            background: linear-gradient(45deg, #ff6b6b, #4ecdc4, #45b7d1);
+            border-radius: 20px;
+            margin: 0 auto 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 4rem;
+            color: white;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .movie-title {
+            font-family: 'Quicksand', sans-serif;
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            background: linear-gradient(45deg, #ff6b6b, #4ecdc4, #45b7d1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-weight: 700;
+        }
+
+        .movie-description {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            margin-bottom: 2rem;
+            line-height: 1.6;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .movie-meta {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .meta-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.9rem;
+        }
+
+        .watch-button {
+            background: linear-gradient(45deg, #45b7d1, #96ceb4);
+            border: none;
+            padding: 1.2rem 2.5rem;
+            border-radius: 50px;
+            color: white;
+            font-size: 1.2rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 15px 35px rgba(69, 183, 209, 0.3);
+            font-family: 'Quicksand', sans-serif;
+            letter-spacing: 0.5px;
+        }
+
+        .watch-button:hover {
+            transform: translateY(-5px) scale(1.05);
+            box-shadow: 0 25px 50px rgba(69, 183, 209, 0.4);
+        }
+
+        /* Movie Categories */
+        .movie-categories {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            margin-bottom: 3rem;
+            flex-wrap: wrap;
+        }
+
+        .category-btn {
+            background: rgba(255, 255, 255, 0.2);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            color: white;
+            padding: 1rem 2rem;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+            font-family: 'Quicksand', sans-serif;
+            font-size: 1rem;
+            letter-spacing: 0.5px;
+        }
+
+        .category-btn:hover,
+        .category-btn.active {
+            background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
+            border-color: rgba(255, 255, 255, 0.5);
+            box-shadow: 0 10px 25px rgba(255, 107, 107, 0.3);
+            transform: translateY(-2px);
+        }
+
+        /* Movies Grid */
+        .movies-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 2rem;
+            margin-bottom: 4rem;
+        }
+
+        .movie-card {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(20px);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 25px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .movie-card:hover {
+            transform: translateY(-15px) scale(1.02);
+            border-color: rgba(255, 255, 255, 0.5);
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.2);
+        }
+
+        .movie-thumbnail {
+            width: 100%;
+            height: 200px;
+            background: linear-gradient(45deg, #ff6b6b, #4ecdc4, #45b7d1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            color: white;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .movie-thumbnail::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(45deg, transparent 30%, rgba(255,255,255,0.1) 50%, transparent 70%);
+            transform: translateX(-100%);
+            transition: transform 0.6s;
+        }
+
+        .movie-card:hover .movie-thumbnail::before {
+            transform: translateX(100%);
+        }
+
+        .movie-content {
+            padding: 2rem;
+        }
+
+        .movie-card-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-family: 'Quicksand', sans-serif;
+        }
+
+        .movie-card-description {
+            opacity: 0.9;
+            font-size: 0.9rem;
+            line-height: 1.5;
+            margin-bottom: 1rem;
+        }
+
+        .movie-card-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            font-size: 0.8rem;
+            opacity: 0.7;
+        }
+
+        .movie-rating {
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+            color: #ffd700;
+        }
+
+        .watch-now-btn {
+            width: 100%;
+            background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
+            border: none;
+            padding: 1rem;
+            border-radius: 15px;
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            font-family: 'Quicksand', sans-serif;
+            font-size: 1.1rem;
+            letter-spacing: 0.5px;
+        }
+
+        .watch-now-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 30px rgba(255, 107, 107, 0.4);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .mac-dock {
+                bottom: 10px;
+                padding: 10px 15px;
+                gap: 12px;
+            }
+            
+            .dock-item {
+                width: 50px;
+                height: 50px;
+                font-size: 1.3rem;
+            }
+
+            .page-title {
+                font-size: 2.5rem;
+            }
+
+            .movies-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .movie-categories {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .movie-meta {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .main-content {
+                padding: 4rem 1rem 8rem;
+            }
+        }
+
+        /* Floating Animation */
+        .floating {
+            animation: float 6s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+        }
+
+        /* Bubble Effect */
+        .bubble {
+            position: absolute;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            pointer-events: none;
+            animation: bubble-float 8s infinite ease-in-out;
+        }
+
+        @keyframes bubble-float {
+            0% { transform: translateY(100vh) scale(0); opacity: 0; }
+            10% { opacity: 1; }
+            90% { opacity: 1; }
+            100% { transform: translateY(-100px) scale(1); opacity: 0; }
+        }
+    </style>
+</head>
+<body>
+    <div class="vanta-bg" id="vanta-bg"></div>
+
+    <!-- Apple Mac App Navigation -->
+    <nav class="mac-dock">
+        <a href="index.html" class="dock-item" data-label="🏠 Home">
+            <i class="fas fa-home"></i>
+        </a>
+        <a href="games.html" class="dock-item" data-label="🎮 Games">
+            <i class="fas fa-gamepad"></i>
+        </a>
+        <a href="proxies.html" class="dock-item" data-label="🔒 Proxies">
+            <i class="fas fa-shield-alt"></i>
+        </a>
+        <a href="music.html" class="dock-item" data-label="🎵 Music">
+            <i class="fas fa-music"></i>
+        </a>
+        <a href="movies.html" class="dock-item active" data-label="🎬 Movies">
+            <i class="fas fa-film"></i>
+        </a>
+        <a href="game-sites.html" class="dock-item" data-label="🌐 Game Sites">
+            <i class="fas fa-globe"></i>
+        </a>
+        <a href="website.html" class="dock-item" data-label="💻 Website">
+            <i class="fas fa-code"></i>
+        </a>
+        <a href="soundboard.html" class="dock-item" data-label="🔊 Soundboard">
+            <i class="fas fa-volume-up"></i>
+        </a>
+        <a href="chat.html" class="dock-item" data-label="💬 Chat">
+            <i class="fas fa-comments"></i>
+        </a>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <h1 class="page-title floating">Funky Movies</h1>
+
+        <!-- Featured Movie -->
+        <div class="featured-movie">
+            <div class="movie-poster">
+                <i class="fas fa-gamepad"></i>
+            </div>
+            <h2 class="movie-title">The Gaming Revolution</h2>
+            <p class="movie-description">
+                Dive deep into the world of competitive gaming and esports. Follow the journey of professional gamers 
+                as they compete in the biggest tournaments and explore the billion-dollar industry that has taken the world by storm.
+            </p>
+            <div class="movie-meta">
+                <div class="meta-item">
+                    <i class="fas fa-clock"></i>
+                    <span>2h 15m</span>
+                </div>
+                <div class="meta-item">
+                    <i class="fas fa-star"></i>
+                    <span>8.7/10</span>
+                </div>
+                <div class="meta-item">
+                    <i class="fas fa-calendar"></i>
+                    <span>2024</span>
+                </div>
+                <div class="meta-item">
+                    <i class="fas fa-film"></i>
+                    <span>Documentary</span>
+                </div>
+            </div>
+            <button class="watch-button">
+                <i class="fas fa-play"></i>
+                Watch Now
+            </button>
+        </div>
+
+        <!-- Movie Categories -->
+        <div class="movie-categories">
+            <button class="category-btn active" data-category="all">All Movies</button>
+            <button class="category-btn" data-category="documentary">Documentaries</button>
+            <button class="category-btn" data-category="esports">Esports</button>
+            <button class="category-btn" data-category="animation">Animation</button>
+            <button class="category-btn" data-category="action">Action</button>
+            <button class="category-btn" data-category="adventure">Adventure</button>
+        </div>
+
+        <!-- Movies Grid -->
+        <div class="movies-grid" id="moviesGrid">
+            <!-- Documentary Movies -->
+            <div class="movie-card" data-category="documentary">
+                <div class="movie-thumbnail">
+                    <i class="fas fa-trophy"></i>
+                </div>
+                <div class="movie-content">
+                    <h3 class="movie-card-title">Esports Champions</h3>
+                    <p class="movie-card-description">The rise of competitive gaming and the legends who shaped the industry.</p>
+                    <div class="movie-card-meta">
+                        <div class="movie-rating">
+                            <i class="fas fa-star"></i>
+                            <span>9.1/10</span>
+                        </div>
+                        <span>1h 45m</span>
+                    </div>
+                    <button class="watch-now-btn">
+                        <i class="fas fa-play"></i>
+                        Watch Now
+                    </button>
+                </div>
+            </div>
+
+            <div class="movie-card" data-category="documentary">
+                <div class="movie-thumbnail">
+                    <i class="fas fa-code"></i>
+                </div>
+                <div class="movie-content">
+                    <h3 class="movie-card-title">Game Developers</h3>
+                    <p class="movie-card-description">Behind the scenes of game development and the creative minds behind your favorite titles.</p>
+                    <div class="movie-card-meta">
+                        <div class="movie-rating">
+                            <i class="fas fa-star"></i>
+                            <span>8.3/10</span>
+                        </div>
+                        <span>2h 5m</span>
+                    </div>
+                    <button class="watch-now-btn">
+                        <i class="fas fa-play"></i>
+                        Watch Now
+                    </button>
+                </div>
+            </div>
+
+            <!-- Esports Movies -->
+            <div class="movie-card" data-category="esports">
+                <div class="movie-thumbnail">
+                    <i class="fas fa-gamepad"></i>
+                </div>
+                <div class="movie-content">
+                    <h3 class="movie-card-title">The Finals</h3>
+                    <p class="movie-card-description">The ultimate esports tournament featuring the world's best players competing for glory.</p>
+                    <div class="movie-card-meta">
+                        <div class="movie-rating">
+                            <i class="fas fa-star"></i>
+                            <span>8.8/10</span>
+                        </div>
+                        <span>1h 30m</span>
+                    </div>
+                    <button class="watch-now-btn">
+                        <i class="fas fa-play"></i>
+                        Watch Now
+                    </button>
+                </div>
+            </div>
+
+            <div class="movie-card" data-category="esports">
+                <div class="movie-thumbnail">
+                    <i class="fas fa-users"></i>
+                </div>
+                <div class="movie-content">
+                    <h3 class="movie-card-title">Team Dynamics</h3>
+                    <p class="movie-card-description">The story of professional gaming teams and their journey to the top.</p>
+                    <div class="movie-card-meta">
+                        <div class="movie-rating">
+                            <i class="fas fa-star"></i>
+                            <span>8.5/10</span>
+                        </div>
+                        <span>1h 55m</span>
+                    </div>
+                    <button class="watch-now-btn">
+                        <i class="fas fa-play"></i>
+                        Watch Now
+                    </button>
+                </div>
+            </div>
+
+            <!-- Animation Movies -->
+            <div class="movie-card" data-category="animation">
+                <div class="movie-thumbnail">
+                    <i class="fas fa-dragon"></i>
+                </div>
+                <div class="movie-content">
+                    <h3 class="movie-card-title">Pixel Quest</h3>
+                    <p class="movie-card-description">An animated adventure through the world of classic video games.</p>
+                    <div class="movie-card-meta">
+                        <div class="movie-rating">
+                            <i class="fas fa-star"></i>
+                            <span>8.9/10</span>
+                        </div>
+                        <span>1h 20m</span>
+                    </div>
+                    <button class="watch-now-btn">
+                        <i class="fas fa-play"></i>
+                        Watch Now
+                    </button>
+                </div>
+            </div>
+
+            <div class="movie-card" data-category="animation">
+                <div class="movie-thumbnail">
+                    <i class="fas fa-robot"></i>
+                </div>
+                <div class="movie-content">
+                    <h3 class="movie-card-title">Cyber Heroes</h3>
+                    <p class="movie-card-description">Animated story of AI heroes saving the digital world from corruption.</p>
+                    <div class="movie-card-meta">
+                        <div class="movie-rating">
+                            <i class="fas fa-star"></i>
+                            <span>8.2/10</span>
+                        </div>
+                        <span>1h 35m</span>
+                    </div>
+                    <button class="watch-now-btn">
+                        <i class="fas fa-play"></i>
+                        Watch Now
+                    </button>
+                </div>
+            </div>
+
+            <!-- Action Movies -->
+            <div class="movie-card" data-category="action">
+                <div class="movie-thumbnail">
+                    <i class="fas fa-fist-raised"></i>
+                </div>
+                <div class="movie-content">
+                    <h3 class="movie-card-title">Street Fighter: Legacy</h3>
+                    <p class="movie-card-description">Live-action adaptation of the legendary fighting game franchise.</p>
+                    <div class="movie-card-meta">
+                        <div class="movie-rating">
+                            <i class="fas fa-star"></i>
+                            <span>7.8/10</span>
+                        </div>
+                        <span>2h 10m</span>
+                    </div>
+                    <button class="watch-now-btn">
+                        <i class="fas fa-play"></i>
+                        Watch Now
+                    </button>
+                </div>
+            </div>
+
+            <div class="movie-card" data-category="action">
+                <div class="movie-thumbnail">
+                    <i class="fas fa-car"></i>
+                </div>
+                <div class="movie-content">
+                    <h3 class="movie-card-title">Need for Speed: Underground</h3>
+                    <p class="movie-card-description">High-octane racing action based on the popular video game series.</p>
+                    <div class="movie-card-meta">
+                        <div class="movie-rating">
+                            <i class="fas fa-star"></i>
+                            <span>7.5/10</span>
+                        </div>
+                        <span>1h 50m</span>
+                    </div>
+                    <button class="watch-now-btn">
+                        <i class="fas fa-play"></i>
+                        Watch Now
+                    </button>
+                </div>
+            </div>
+
+            <!-- Adventure Movies -->
+            <div class="movie-card" data-category="adventure">
+                <div class="movie-thumbnail">
+                    <i class="fas fa-treasure-chest"></i>
+                </div>
+                <div class="movie-content">
+                    <h3 class="movie-card-title">Tomb Explorer</h3>
+                    <p class="movie-card-description">Archaeological adventure inspired by classic adventure games.</p>
+                    <div class="movie-card-meta">
+                        <div class="movie-rating">
+                            <i class="fas fa-star"></i>
+                            <span>8.0/10</span>
+                        </div>
+                        <span>2h 5m</span>
+                    </div>
+                    <button class="watch-now-btn">
+                        <i class="fas fa-play"></i>
+                        Watch Now
+                    </button>
+                </div>
+            </div>
+
+            <div class="movie-card" data-category="adventure">
+                <div class="movie-thumbnail">
+                    <i class="fas fa-map"></i>
+                </div>
+                <div class="movie-content">
+                    <h3 class="movie-card-title">Quest for Glory</h3>
+                    <p class="movie-card-description">Epic fantasy adventure following a hero's journey through magical realms.</p>
+                    <div class="movie-card-meta">
+                        <div class="movie-rating">
+                            <i class="fas fa-star"></i>
+                            <span>8.4/10</span>
+                        </div>
+                        <span>2h 20m</span>
+                    </div>
+                    <button class="watch-now-btn">
+                        <i class="fas fa-play"></i>
+                        Watch Now
+                    </button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Floating Bubbles -->
+    <div id="bubbles-container"></div>
+
+    <script>
+        // Initialize Vanta.js background
+        VANTA.NET({
+            el: "#vanta-bg",
+            mouseControls: true,
+            touchControls: true,
+            gyroControls: false,
+            minHeight: 200.00,
+            minWidth: 200.00,
+            scale: 1.00,
+            scaleMobile: 1.00,
+            color: 0xff6b6b,
+            backgroundColor: 0x667eea,
+            points: 8.00,
+            maxDistance: 25.00,
+            spacing: 18.00
+        });
+
+        // Create floating bubbles
+        function createBubbles() {
+            const container = document.getElementById('bubbles-container');
+            const bubbleCount = 12;
+
+            for (let i = 0; i < bubbleCount; i++) {
+                const bubble = document.createElement('div');
+                bubble.className = 'bubble';
+                bubble.style.left = Math.random() * 100 + '%';
+                bubble.style.width = (Math.random() * 20 + 10) + 'px';
+                bubble.style.height = bubble.style.width;
+                bubble.style.animationDelay = Math.random() * 8 + 's';
+                bubble.style.animationDuration = (Math.random() * 4 + 6) + 's';
+                container.appendChild(bubble);
+            }
+        }
+
+        // Enhanced dock interactions
+        const dockItems = document.querySelectorAll('.dock-item');
+        
+        dockItems.forEach(item => {
+            item.addEventListener('mouseenter', function() {
+                this.style.transform = 'scale(1.15) translateY(-8px)';
+            });
+            
+            item.addEventListener('mouseleave', function() {
+                if (!this.classList.contains('active')) {
+                    this.style.transform = 'scale(1) translateY(0)';
+                }
+            });
+        });
+
+        // Movie filtering
+        const categoryBtns = document.querySelectorAll('.category-btn');
+        const movieCards = document.querySelectorAll('.movie-card');
+
+        categoryBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                // Update active button
+                categoryBtns.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+
+                const category = btn.dataset.category;
+                
+                // Filter movies
+                movieCards.forEach(card => {
+                    if (category === 'all' || card.dataset.category === category) {
+                        card.style.display = 'block';
+                        card.style.animation = 'fadeIn 0.5s ease';
+                    } else {
+                        card.style.display = 'none';
+                    }
+                });
+            });
+        });
+
+        // Watch button functionality
+        document.querySelectorAll('.watch-button, .watch-now-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const originalText = this.innerHTML;
+                this.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Loading...';
+                this.disabled = true;
+                
+                setTimeout(() => {
+                    this.innerHTML = '<i class="fas fa-play"></i> Playing...';
+                    setTimeout(() => {
+                        this.innerHTML = originalText;
+                        this.disabled = false;
+                        alert('Movie would start playing here in a real implementation!');
+                    }, 2000);
+                }, 1500);
+            });
+        });
+
+        // Add fade in animation
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes fadeIn {
+                from { opacity: 0; transform: translateY(20px); }
+                to { opacity: 1; transform: translateY(0); }
+            }
+        `;
+        document.head.appendChild(style);
+
+        // Initialize bubbles
+        createBubbles();
+
+        // Add sparkle effect on hover
+        document.querySelectorAll('.movie-card, .featured-movie').forEach(card => {
+            card.addEventListener('mouseenter', function() {
+                this.style.transform += ' rotate(1deg)';
+            });
+            
+            card.addEventListener('mouseleave', function() {
+                this.style.transform = this.style.transform.replace(' rotate(1deg)', '');
+            });
+        });
+    </script>
+</body>
+</html>

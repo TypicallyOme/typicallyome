@@ -3,11 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GameHub - Ultimate Gaming Portal</title>
+    <title>The Funky Site</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/vanta/0.5.24/vanta.net.min.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Orbitron:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Orbitron:wght@400;500;600;700;800&family=Quicksand:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         * {
@@ -17,10 +17,11 @@
         }
 
         body {
-            font-family: 'Inter', sans-serif;
-            background: #0a0a0a;
+            font-family: 'Quicksand', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: #ffffff;
             overflow-x: hidden;
+            min-height: 100vh;
         }
 
         .vanta-bg {
@@ -32,66 +33,78 @@
             z-index: -1;
         }
 
-        /* Navigation */
-        .nav-container {
+        /* Apple Mac App Navigation */
+        .mac-dock {
             position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            z-index: 1000;
-            background: rgba(10, 10, 10, 0.9);
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(255, 255, 255, 0.25);
             backdrop-filter: blur(20px);
-            border-bottom: 1px solid rgba(0, 255, 255, 0.2);
-        }
-
-        .nav-content {
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 25px;
+            padding: 12px 20px;
             display: flex;
             align-items: center;
-            justify-content: space-between;
-            padding: 1rem 2rem;
-            max-width: 1400px;
-            margin: 0 auto;
-        }
-
-        .logo {
-            font-family: 'Orbitron', monospace;
-            font-size: 1.8rem;
-            font-weight: 800;
-            background: linear-gradient(45deg, #00ffff, #ff00ff);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            text-shadow: 0 0 30px rgba(0, 255, 255, 0.5);
-        }
-
-        .nav-links {
-            display: flex;
-            gap: 2rem;
-            list-style: none;
-        }
-
-        .nav-link {
-            color: #ffffff;
-            text-decoration: none;
-            font-weight: 500;
+            gap: 15px;
+            z-index: 1000;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
             transition: all 0.3s ease;
+        }
+
+        .dock-item {
+            width: 60px;
+            height: 60px;
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             position: relative;
-            padding: 0.5rem 1rem;
+            color: white;
+            text-decoration: none;
+            font-size: 1.5rem;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .dock-item:hover {
+            transform: scale(1.15) translateY(-8px);
+            background: rgba(255, 255, 255, 0.4);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
+        }
+
+        .dock-item.active {
+            background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
+            box-shadow: 0 0 30px rgba(255, 107, 107, 0.5);
+        }
+
+        .dock-item::after {
+            content: attr(data-label);
+            position: absolute;
+            bottom: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0, 0, 0, 0.8);
+            color: white;
+            padding: 8px 12px;
             border-radius: 8px;
+            font-size: 0.8rem;
+            white-space: nowrap;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s;
+            margin-bottom: 15px;
+            font-family: 'Inter', sans-serif;
+            font-weight: 500;
         }
 
-        .nav-link:hover {
-            color: #00ffff;
-            background: rgba(0, 255, 255, 0.1);
-            box-shadow: 0 0 20px rgba(0, 255, 255, 0.3);
+        .dock-item:hover::after {
+            opacity: 1;
         }
 
-        .nav-link.active {
-            color: #00ffff;
-            background: rgba(0, 255, 255, 0.2);
-        }
-
-        /* Hero Section */
+        /* Bubbly Content */
         .hero-section {
             min-height: 100vh;
             display: flex;
@@ -100,6 +113,7 @@
             text-align: center;
             position: relative;
             padding: 2rem;
+            margin-bottom: 2rem;
         }
 
         .hero-content {
@@ -108,17 +122,18 @@
         }
 
         .hero-title {
-            font-family: 'Orbitron', monospace;
-            font-size: clamp(3rem, 8vw, 6rem);
-            font-weight: 800;
-            margin-bottom: 1rem;
-            background: linear-gradient(45deg, #00ffff, #ff00ff, #ffff00);
+            font-family: 'Quicksand', sans-serif;
+            font-size: clamp(4rem, 10vw, 8rem);
+            font-weight: 700;
+            margin-bottom: 2rem;
+            background: linear-gradient(45deg, #ff6b6b, #4ecdc4, #45b7d1, #96ceb4);
             background-size: 200% 200%;
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
             animation: gradient-shift 3s ease-in-out infinite;
-            text-shadow: 0 0 50px rgba(0, 255, 255, 0.5);
+            text-shadow: 0 0 50px rgba(255, 107, 107, 0.3);
+            letter-spacing: -2px;
         }
 
         @keyframes gradient-shift {
@@ -127,73 +142,80 @@
         }
 
         .hero-subtitle {
-            font-size: clamp(1.2rem, 3vw, 1.8rem);
+            font-size: clamp(1.5rem, 4vw, 2.5rem);
             margin-bottom: 2rem;
             opacity: 0.9;
-            font-weight: 300;
+            font-weight: 500;
+            letter-spacing: 1px;
         }
 
         .hero-description {
-            font-size: clamp(1rem, 2vw, 1.2rem);
+            font-size: clamp(1.2rem, 3vw, 1.6rem);
             margin-bottom: 3rem;
             opacity: 0.8;
             line-height: 1.6;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
         }
 
         .cta-buttons {
             display: flex;
-            gap: 1rem;
+            gap: 2rem;
             justify-content: center;
             flex-wrap: wrap;
         }
 
         .cta-button {
-            background: linear-gradient(45deg, #00ffff, #0080ff);
+            background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
             border: none;
-            padding: 1rem 2rem;
+            padding: 1.2rem 2.5rem;
             border-radius: 50px;
             color: white;
-            font-size: 1rem;
+            font-size: 1.2rem;
             font-weight: 600;
             cursor: pointer;
             transition: all 0.3s ease;
             text-decoration: none;
             display: inline-flex;
             align-items: center;
-            gap: 0.5rem;
-            box-shadow: 0 10px 30px rgba(0, 255, 255, 0.3);
+            gap: 0.8rem;
+            box-shadow: 0 15px 35px rgba(255, 107, 107, 0.3);
+            font-family: 'Quicksand', sans-serif;
+            letter-spacing: 0.5px;
         }
 
         .cta-button:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 15px 40px rgba(0, 255, 255, 0.4);
+            transform: translateY(-5px) scale(1.05);
+            box-shadow: 0 25px 50px rgba(255, 107, 107, 0.4);
         }
 
         .cta-button.secondary {
-            background: linear-gradient(45deg, #ff00ff, #ff0080);
-            box-shadow: 0 10px 30px rgba(255, 0, 255, 0.3);
+            background: linear-gradient(45deg, #45b7d1, #96ceb4);
+            box-shadow: 0 15px 35px rgba(69, 183, 209, 0.3);
         }
 
         .cta-button.secondary:hover {
-            box-shadow: 0 15px 40px rgba(255, 0, 255, 0.4);
+            box-shadow: 0 25px 50px rgba(69, 183, 209, 0.4);
         }
 
         /* Features Section */
         .features-section {
-            padding: 6rem 2rem;
+            padding: 4rem 2rem;
             max-width: 1400px;
             margin: 0 auto;
         }
 
         .section-title {
-            font-family: 'Orbitron', monospace;
-            font-size: 2.5rem;
+            font-family: 'Quicksand', sans-serif;
+            font-size: 3rem;
             text-align: center;
             margin-bottom: 3rem;
-            background: linear-gradient(45deg, #00ffff, #ff00ff);
+            background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
+            font-weight: 600;
         }
 
         .features-grid {
@@ -204,11 +226,11 @@
         }
 
         .feature-card {
-            background: rgba(255, 255, 255, 0.05);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(0, 255, 255, 0.2);
-            border-radius: 20px;
-            padding: 2rem;
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 25px;
+            padding: 2.5rem;
             text-align: center;
             transition: all 0.3s ease;
             position: relative;
@@ -222,7 +244,7 @@
             left: 0;
             right: 0;
             bottom: 0;
-            background: linear-gradient(45deg, transparent 30%, rgba(0,255,255,0.1) 50%, transparent 70%);
+            background: linear-gradient(45deg, transparent 30%, rgba(255,255,255,0.1) 50%, transparent 70%);
             transform: translateX(-100%);
             transition: transform 0.6s;
         }
@@ -232,15 +254,15 @@
         }
 
         .feature-card:hover {
-            transform: translateY(-10px);
-            border-color: rgba(0, 255, 255, 0.5);
-            box-shadow: 0 20px 40px rgba(0, 255, 255, 0.2);
+            transform: translateY(-15px) scale(1.02);
+            border-color: rgba(255, 255, 255, 0.5);
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.2);
         }
 
         .feature-icon {
-            font-size: 3rem;
-            margin-bottom: 1rem;
-            background: linear-gradient(45deg, #00ffff, #ff00ff);
+            font-size: 4rem;
+            margin-bottom: 1.5rem;
+            background: linear-gradient(45deg, #ff6b6b, #4ecdc4, #45b7d1);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
@@ -249,24 +271,26 @@
         }
 
         .feature-title {
-            font-size: 1.3rem;
+            font-size: 1.5rem;
             font-weight: 600;
             margin-bottom: 1rem;
             position: relative;
             z-index: 1;
+            font-family: 'Quicksand', sans-serif;
         }
 
         .feature-description {
-            opacity: 0.8;
+            opacity: 0.9;
             line-height: 1.6;
             position: relative;
             z-index: 1;
+            font-size: 1rem;
         }
 
         /* Stats Section */
         .stats-section {
             padding: 4rem 2rem;
-            background: rgba(0, 255, 255, 0.05);
+            background: rgba(255, 255, 255, 0.1);
             backdrop-filter: blur(10px);
         }
 
@@ -284,10 +308,10 @@
         }
 
         .stat-number {
-            font-family: 'Orbitron', monospace;
-            font-size: 3rem;
-            font-weight: 800;
-            background: linear-gradient(45deg, #00ffff, #ff00ff);
+            font-family: 'Quicksand', sans-serif;
+            font-size: 3.5rem;
+            font-weight: 700;
+            background: linear-gradient(45deg, #ff6b6b, #4ecdc4, #45b7d1);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
@@ -296,45 +320,28 @@
 
         .stat-label {
             opacity: 0.8;
-            font-size: 1rem;
+            font-size: 1.1rem;
             text-transform: uppercase;
             letter-spacing: 1px;
+            font-weight: 500;
         }
 
-        /* Mobile Menu */
-        .mobile-menu-toggle {
-            display: none;
-            background: none;
-            border: none;
-            color: white;
-            font-size: 1.5rem;
-            cursor: pointer;
-        }
-
+        /* Responsive Design */
         @media (max-width: 768px) {
-            .nav-links {
-                display: none;
-                position: absolute;
-                top: 100%;
-                left: 0;
-                right: 0;
-                background: rgba(10, 10, 10, 0.95);
-                backdrop-filter: blur(20px);
-                flex-direction: column;
-                padding: 2rem;
-                border-top: 1px solid rgba(0, 255, 255, 0.2);
+            .mac-dock {
+                bottom: 10px;
+                padding: 10px 15px;
+                gap: 12px;
             }
-
-            .nav-links.active {
-                display: flex;
-            }
-
-            .mobile-menu-toggle {
-                display: block;
+            
+            .dock-item {
+                width: 50px;
+                height: 50px;
+                font-size: 1.3rem;
             }
 
             .hero-title {
-                font-size: 3rem;
+                font-size: 4rem;
             }
 
             .cta-buttons {
@@ -351,51 +358,75 @@
             }
         }
 
-        /* Scroll animations */
-        .fade-in {
-            opacity: 0;
-            transform: translateY(30px);
-            transition: all 0.6s ease;
+        /* Floating Animation */
+        .floating {
+            animation: float 6s ease-in-out infinite;
         }
 
-        .fade-in.visible {
-            opacity: 1;
-            transform: translateY(0);
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+        }
+
+        /* Bubble Effect */
+        .bubble {
+            position: absolute;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            pointer-events: none;
+            animation: bubble-float 8s infinite ease-in-out;
+        }
+
+        @keyframes bubble-float {
+            0% { transform: translateY(100vh) scale(0); opacity: 0; }
+            10% { opacity: 1; }
+            90% { opacity: 1; }
+            100% { transform: translateY(-100px) scale(1); opacity: 0; }
         }
     </style>
 </head>
 <body>
     <div class="vanta-bg" id="vanta-bg"></div>
 
-    <!-- Navigation -->
-    <nav class="nav-container">
-        <div class="nav-content">
-            <div class="logo">GameHub</div>
-            <ul class="nav-links" id="navLinks">
-                <li><a href="index.html" class="nav-link active">Home</a></li>
-                <li><a href="games.html" class="nav-link">Games</a></li>
-                <li><a href="proxies.html" class="nav-link">Proxies</a></li>
-                <li><a href="music.html" class="nav-link">Music</a></li>
-                <li><a href="movies.html" class="nav-link">Movies</a></li>
-                <li><a href="game-sites.html" class="nav-link">Game Sites</a></li>
-                <li><a href="website.html" class="nav-link">Website</a></li>
-                <li><a href="soundboard.html" class="nav-link">Soundboard</a></li>
-                <li><a href="chat.html" class="nav-link">Chat</a></li>
-            </ul>
-            <button class="mobile-menu-toggle" id="mobileMenuToggle">
-                <i class="fas fa-bars"></i>
-            </button>
-        </div>
+    <!-- Apple Mac App Navigation -->
+    <nav class="mac-dock">
+        <a href="index.html" class="dock-item active" data-label="🏠 Home">
+            <i class="fas fa-home"></i>
+        </a>
+        <a href="games.html" class="dock-item" data-label="🎮 Games">
+            <i class="fas fa-gamepad"></i>
+        </a>
+        <a href="proxies.html" class="dock-item" data-label="🔒 Proxies">
+            <i class="fas fa-shield-alt"></i>
+        </a>
+        <a href="music.html" class="dock-item" data-label="🎵 Music">
+            <i class="fas fa-music"></i>
+        </a>
+        <a href="movies.html" class="dock-item" data-label="🎬 Movies">
+            <i class="fas fa-film"></i>
+        </a>
+        <a href="game-sites.html" class="dock-item" data-label="🌐 Game Sites">
+            <i class="fas fa-globe"></i>
+        </a>
+        <a href="website.html" class="dock-item" data-label="💻 Website">
+            <i class="fas fa-code"></i>
+        </a>
+        <a href="soundboard.html" class="dock-item" data-label="🔊 Soundboard">
+            <i class="fas fa-volume-up"></i>
+        </a>
+        <a href="chat.html" class="dock-item" data-label="💬 Chat">
+            <i class="fas fa-comments"></i>
+        </a>
     </nav>
 
     <!-- Hero Section -->
     <section class="hero-section">
         <div class="hero-content">
-            <h1 class="hero-title">GameHub</h1>
-            <p class="hero-subtitle">Ultimate Gaming Portal</p>
+            <h1 class="hero-title floating">The Funky Site</h1>
+            <p class="hero-subtitle">woww something better then arcadium</p>
             <p class="hero-description">
                 Dive into the ultimate gaming experience with our comprehensive portal. 
-                From games and proxies to music and movies - everything you need in one cosmic interface.
+                From games and proxies to music and movies - everything you need in one sigma interface.
             </p>
             <div class="cta-buttons">
                 <a href="games.html" class="cta-button">
@@ -412,9 +443,9 @@
 
     <!-- Features Section -->
     <section class="features-section">
-        <h2 class="section-title fade-in">Gaming Universe</h2>
+        <h2 class="section-title">Gaming Universe</h2>
         <div class="features-grid">
-            <div class="feature-card fade-in">
+            <div class="feature-card">
                 <div class="feature-icon">
                     <i class="fas fa-gamepad"></i>
                 </div>
@@ -425,7 +456,7 @@
                 </p>
             </div>
 
-            <div class="feature-card fade-in">
+            <div class="feature-card">
                 <div class="feature-icon">
                     <i class="fas fa-shield-alt"></i>
                 </div>
@@ -436,7 +467,7 @@
                 </p>
             </div>
 
-            <div class="feature-card fade-in">
+            <div class="feature-card">
                 <div class="feature-icon">
                     <i class="fas fa-music"></i>
                 </div>
@@ -447,7 +478,7 @@
                 </p>
             </div>
 
-            <div class="feature-card fade-in">
+            <div class="feature-card">
                 <div class="feature-icon">
                     <i class="fas fa-film"></i>
                 </div>
@@ -458,7 +489,7 @@
                 </p>
             </div>
 
-            <div class="feature-card fade-in">
+            <div class="feature-card">
                 <div class="feature-icon">
                     <i class="fas fa-volume-up"></i>
                 </div>
@@ -469,7 +500,7 @@
                 </p>
             </div>
 
-            <div class="feature-card fade-in">
+            <div class="feature-card">
                 <div class="feature-icon">
                     <i class="fas fa-comments"></i>
                 </div>
@@ -485,24 +516,27 @@
     <!-- Stats Section -->
     <section class="stats-section">
         <div class="stats-container">
-            <div class="stat-card fade-in">
+            <div class="stat-card">
                 <div class="stat-number">1000+</div>
                 <div class="stat-label">Games Available</div>
             </div>
-            <div class="stat-card fade-in">
+            <div class="stat-card">
                 <div class="stat-number">50+</div>
                 <div class="stat-label">Proxy Servers</div>
             </div>
-            <div class="stat-card fade-in">
+            <div class="stat-card">
                 <div class="stat-number">10K+</div>
                 <div class="stat-label">Music Tracks</div>
             </div>
-            <div class="stat-card fade-in">
+            <div class="stat-card">
                 <div class="stat-number">500+</div>
                 <div class="stat-label">Active Users</div>
             </div>
         </div>
     </section>
+
+    <!-- Floating Bubbles -->
+    <div id="bubbles-container"></div>
 
     <script>
         // Initialize Vanta.js background
@@ -515,42 +549,48 @@
             minWidth: 200.00,
             scale: 1.00,
             scaleMobile: 1.00,
-            color: 0x00ffff,
-            backgroundColor: 0x0a0a0a,
+            color: 0xff6b6b,
+            backgroundColor: 0x667eea,
             points: 8.00,
             maxDistance: 25.00,
             spacing: 18.00
         });
 
-        // Mobile menu toggle
-        const mobileMenuToggle = document.getElementById('mobileMenuToggle');
-        const navLinks = document.getElementById('navLinks');
+        // Create floating bubbles
+        function createBubbles() {
+            const container = document.getElementById('bubbles-container');
+            const bubbleCount = 15;
 
-        mobileMenuToggle.addEventListener('click', () => {
-            navLinks.classList.toggle('active');
-        });
+            for (let i = 0; i < bubbleCount; i++) {
+                const bubble = document.createElement('div');
+                bubble.className = 'bubble';
+                bubble.style.left = Math.random() * 100 + '%';
+                bubble.style.width = (Math.random() * 20 + 10) + 'px';
+                bubble.style.height = bubble.style.width;
+                bubble.style.animationDelay = Math.random() * 8 + 's';
+                bubble.style.animationDuration = (Math.random() * 4 + 6) + 's';
+                container.appendChild(bubble);
+            }
+        }
 
-        // Scroll animations
-        const observerOptions = {
-            threshold: 0.1,
-            rootMargin: '0px 0px -50px 0px'
-        };
-
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.classList.add('visible');
+        // Enhanced dock interactions
+        const dockItems = document.querySelectorAll('.dock-item');
+        
+        dockItems.forEach(item => {
+            item.addEventListener('mouseenter', function() {
+                this.style.transform = 'scale(1.15) translateY(-8px)';
+            });
+            
+            item.addEventListener('mouseleave', function() {
+                if (!this.classList.contains('active')) {
+                    this.style.transform = 'scale(1) translateY(0)';
                 }
             });
-        }, observerOptions);
-
-        document.querySelectorAll('.fade-in').forEach(el => {
-            observer.observe(el);
         });
 
-        // Smooth scrolling for navigation links
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function (e) {
+        // Smooth scrolling for CTA buttons
+        document.querySelectorAll('.cta-button').forEach(btn => {
+            btn.addEventListener('click', function(e) {
                 e.preventDefault();
                 const target = document.querySelector(this.getAttribute('href'));
                 if (target) {
@@ -559,6 +599,20 @@
                         block: 'start'
                     });
                 }
+            });
+        });
+
+        // Initialize bubbles
+        createBubbles();
+
+        // Add sparkle effect on hover
+        document.querySelectorAll('.feature-card, .stat-card').forEach(card => {
+            card.addEventListener('mouseenter', function() {
+                this.style.transform += ' rotate(1deg)';
+            });
+            
+            card.addEventListener('mouseleave', function() {
+                this.style.transform = this.style.transform.replace(' rotate(1deg)', '');
             });
         });
     </script>

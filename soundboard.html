@@ -1,0 +1,725 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Funky Soundboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Orbitron:wght@400;500;600;700;800&family=Quicksand:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Quicksand', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #ffffff;
+            overflow-x: hidden;
+            min-height: 100vh;
+        }
+
+        .vanta-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+        }
+
+        /* Apple Mac App Navigation */
+        .mac-dock {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(255, 255, 255, 0.25);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 25px;
+            padding: 12px 20px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            z-index: 1000;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease;
+        }
+
+        .dock-item {
+            width: 60px;
+            height: 60px;
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            color: white;
+            text-decoration: none;
+            font-size: 1.5rem;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .dock-item:hover {
+            transform: scale(1.15) translateY(-8px);
+            background: rgba(255, 255, 255, 0.4);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
+        }
+
+        .dock-item.active {
+            background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
+            box-shadow: 0 0 30px rgba(255, 107, 107, 0.5);
+        }
+
+        .dock-item::after {
+            content: attr(data-label);
+            position: absolute;
+            bottom: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0, 0, 0, 0.8);
+            color: white;
+            padding: 8px 12px;
+            border-radius: 8px;
+            font-size: 0.8rem;
+            white-space: nowrap;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s;
+            margin-bottom: 15px;
+            font-family: 'Inter', sans-serif;
+            font-weight: 500;
+        }
+
+        .dock-item:hover::after {
+            opacity: 1;
+        }
+
+        /* Main Content */
+        .main-content {
+            padding: 6rem 2rem 8rem;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .page-title {
+            font-family: 'Quicksand', sans-serif;
+            font-size: 4rem;
+            text-align: center;
+            margin-bottom: 3rem;
+            background: linear-gradient(45deg, #ff6b6b, #4ecdc4, #45b7d1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-weight: 700;
+            letter-spacing: -1px;
+        }
+
+        /* Sound Categories */
+        .sound-categories {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            margin-bottom: 3rem;
+            flex-wrap: wrap;
+        }
+
+        .category-btn {
+            background: rgba(255, 255, 255, 0.2);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            color: white;
+            padding: 1rem 2rem;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+            font-family: 'Quicksand', sans-serif;
+            font-size: 1rem;
+            letter-spacing: 0.5px;
+        }
+
+        .category-btn:hover,
+        .category-btn.active {
+            background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
+            border-color: rgba(255, 255, 255, 0.5);
+            box-shadow: 0 10px 25px rgba(255, 107, 107, 0.3);
+            transform: translateY(-2px);
+        }
+
+        /* Sound Grid */
+        .sound-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 4rem;
+        }
+
+        .sound-button {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(20px);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 20px;
+            padding: 2rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+            color: white;
+            font-family: 'Quicksand', sans-serif;
+            font-weight: 600;
+        }
+
+        .sound-button:hover {
+            transform: translateY(-10px) scale(1.05);
+            border-color: rgba(255, 255, 255, 0.5);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+            background: rgba(255, 255, 255, 0.25);
+        }
+
+        .sound-button.playing {
+            background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
+            border-color: rgba(255, 255, 255, 0.6);
+            animation: pulse 1s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: translateY(-10px) scale(1.05); }
+            50% { transform: translateY(-10px) scale(1.1); }
+        }
+
+        .sound-icon {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            display: block;
+        }
+
+        .sound-title {
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .sound-description {
+            font-size: 0.8rem;
+            opacity: 0.7;
+        }
+
+        /* Audio Visualizer */
+        .visualizer {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 25px;
+            padding: 2rem;
+            margin-bottom: 4rem;
+            text-align: center;
+        }
+
+        .visualizer-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .visualizer-bars {
+            display: flex;
+            align-items: end;
+            justify-content: center;
+            gap: 0.3rem;
+            height: 100px;
+            margin-bottom: 1.5rem;
+        }
+
+        .visualizer-bar {
+            width: 8px;
+            background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
+            border-radius: 4px;
+            transition: height 0.1s ease;
+        }
+
+        .volume-control {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .volume-slider {
+            width: 200px;
+            height: 8px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 4px;
+            overflow: hidden;
+            cursor: pointer;
+        }
+
+        .volume-fill {
+            height: 100%;
+            background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
+            border-radius: 4px;
+            width: 70%;
+            transition: width 0.3s ease;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .mac-dock {
+                bottom: 10px;
+                padding: 10px 15px;
+                gap: 12px;
+            }
+            
+            .dock-item {
+                width: 50px;
+                height: 50px;
+                font-size: 1.3rem;
+            }
+
+            .page-title {
+                font-size: 2.5rem;
+            }
+
+            .sound-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .sound-categories {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .main-content {
+                padding: 4rem 1rem 8rem;
+            }
+        }
+
+        /* Floating Animation */
+        .floating {
+            animation: float 6s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+        }
+
+        /* Bubble Effect */
+        .bubble {
+            position: absolute;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            pointer-events: none;
+            animation: bubble-float 8s infinite ease-in-out;
+        }
+
+        @keyframes bubble-float {
+            0% { transform: translateY(100vh) scale(0); opacity: 0; }
+            10% { opacity: 1; }
+            90% { opacity: 1; }
+            100% { transform: translateY(-100px) scale(1); opacity: 0; }
+        }
+    </style>
+</head>
+<body>
+    <div class="vanta-bg" id="vanta-bg"></div>
+
+    <!-- Apple Mac App Navigation -->
+    <nav class="mac-dock">
+        <a href="index.html" class="dock-item" data-label="🏠 Home">
+            <i class="fas fa-home"></i>
+        </a>
+        <a href="games.html" class="dock-item" data-label="🎮 Games">
+            <i class="fas fa-gamepad"></i>
+        </a>
+        <a href="proxies.html" class="dock-item" data-label="🔒 Proxies">
+            <i class="fas fa-shield-alt"></i>
+        </a>
+        <a href="music.html" class="dock-item" data-label="🎵 Music">
+            <i class="fas fa-music"></i>
+        </a>
+        <a href="movies.html" class="dock-item" data-label="🎬 Movies">
+            <i class="fas fa-film"></i>
+        </a>
+        <a href="game-sites.html" class="dock-item" data-label="🌐 Game Sites">
+            <i class="fas fa-globe"></i>
+        </a>
+        <a href="website.html" class="dock-item" data-label="💻 Website">
+            <i class="fas fa-code"></i>
+        </a>
+        <a href="soundboard.html" class="dock-item active" data-label="🔊 Soundboard">
+            <i class="fas fa-volume-up"></i>
+        </a>
+        <a href="chat.html" class="dock-item" data-label="💬 Chat">
+            <i class="fas fa-comments"></i>
+        </a>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <h1 class="page-title floating">Funky Soundboard</h1>
+
+        <!-- Audio Visualizer -->
+        <div class="visualizer">
+            <h2 class="visualizer-title">Audio Visualizer</h2>
+            <div class="visualizer-bars" id="visualizerBars">
+                <div class="visualizer-bar" style="height: 20px;"></div>
+                <div class="visualizer-bar" style="height: 40px;"></div>
+                <div class="visualizer-bar" style="height: 60px;"></div>
+                <div class="visualizer-bar" style="height: 30px;"></div>
+                <div class="visualizer-bar" style="height: 80px;"></div>
+                <div class="visualizer-bar" style="height: 50px;"></div>
+                <div class="visualizer-bar" style="height: 70px;"></div>
+                <div class="visualizer-bar" style="height: 45px;"></div>
+                <div class="visualizer-bar" style="height: 90px;"></div>
+                <div class="visualizer-bar" style="height: 35px;"></div>
+                <div class="visualizer-bar" style="height: 65px;"></div>
+                <div class="visualizer-bar" style="height: 25px;"></div>
+                <div class="visualizer-bar" style="height: 55px;"></div>
+                <div class="visualizer-bar" style="height: 75px;"></div>
+                <div class="visualizer-bar" style="height: 40px;"></div>
+                <div class="visualizer-bar" style="height: 85px;"></div>
+            </div>
+            <div class="volume-control">
+                <i class="fas fa-volume-down"></i>
+                <div class="volume-slider">
+                    <div class="volume-fill"></div>
+                </div>
+                <i class="fas fa-volume-up"></i>
+            </div>
+        </div>
+
+        <!-- Sound Categories -->
+
+        <!-- Sound Grid -->
+        <div class="sound-grid" id="soundGrid">
+            <!-- Gaming Sounds -->
+            <div class="sound-button" data-category="gaming" data-sound="victory">
+                <i class="fas fa-trophy sound-icon"></i>
+                <div class="sound-title">Victory Fanfare</div>
+                <div class="sound-description">Classic win sound</div>
+            </div>
+
+            <div class="sound-button" data-category="gaming" data-sound="levelup">
+                <i class="fas fa-arrow-up sound-icon"></i>
+                <div class="sound-title">Level Up</div>
+                <div class="sound-description">Character advancement</div>
+            </div>
+
+            <div class="sound-button" data-category="gaming" data-sound="coin">
+                <i class="fas fa-coins sound-icon"></i>
+                <div class="sound-title">Coin Collect</div>
+                <div class="sound-description">Mario style coin</div>
+            </div>
+
+            <div class="sound-button" data-category="gaming" data-sound="powerup">
+                <i class="fas fa-bolt sound-icon"></i>
+                <div class="sound-title">Power Up</div>
+                <div class="sound-description">Ability enhancement</div>
+            </div>
+
+            <div class="sound-button" data-category="gaming" data-sound="gameover">
+                <i class="fas fa-skull sound-icon"></i>
+                <div class="sound-title">Game Over</div>
+                <div class="sound-description">Defeat sound</div>
+            </div>
+
+            <div class="sound-button" data-category="gaming" data-sound="checkpoint">
+                <i class="fas fa-flag sound-icon"></i>
+                <div class="sound-title">Checkpoint</div>
+                <div class="sound-description">Save point reached</div>
+            </div>
+
+            <!-- Meme Sounds -->
+            <div class="sound-button" data-category="memes" data-sound="bruh">
+                <i class="fas fa-surprise sound-icon"></i>
+                <div class="sound-title">Bruh Sound</div>
+                <div class="sound-description">Classic meme sound</div>
+            </div>
+
+            <div class="sound-button" data-category="memes" data-sound="oof">
+                <i class="fas fa-dizzy sound-icon"></i>
+                <div class="sound-title">Roblox Oof</div>
+                <div class="sound-description">Iconic death sound</div>
+            </div>
+
+            <div class="sound-button" data-category="memes" data-sound="sad">
+                <i class="fas fa-sad-tear sound-icon"></i>
+                <div class="sound-title">Sad Violin</div>
+                <div class="sound-description">Trombone sadness</div>
+            </div>
+
+            <div class="sound-button" data-category="memes" data-sound="crickets">
+                <i class="fas fa-bug sound-icon"></i>
+                <div class="sound-title">Crickets</div>
+                <div class="sound-description">Awkward silence</div>
+            </div>
+
+            <div class="sound-button" data-category="memes" data-sound="airhorn">
+                <i class="fas fa-bullhorn sound-icon"></i>
+                <div class="sound-title">Air Horn</div>
+                <div class="sound-description">MLG sound effect</div>
+            </div>
+
+            <div class="sound-button" data-category="memes" data-sound="wow">
+                <i class="fas fa-star sound-icon"></i>
+                <div class="sound-title">Wow Guy</div>
+                <div class="sound-description">Surprised reaction</div>
+            </div>
+
+            <!-- Sound Effects -->
+            <div class="sound-button" data-category="effects" data-sound="explosion">
+                <i class="fas fa-bomb sound-icon"></i>
+                <div class="sound-title">Explosion</div>
+                <div class="sound-description">Big boom sound</div>
+            </div>
+
+            <div class="sound-button" data-category="effects" data-sound="laser">
+                <i class="fas fa-crosshairs sound-icon"></i>
+                <div class="sound-title">Laser Beam</div>
+                <div class="sound-description">Sci-fi weapon</div>
+            </div>
+
+            <div class="sound-button" data-category="effects" data-sound="sword">
+                <i class="fas fa-khanda sound-icon"></i>
+                <div class="sound-title">Sword Swing</div>
+                <div class="sound-description">Medieval weapon</div>
+            </div>
+
+            <div class="sound-button" data-category="effects" data-sound="magic">
+                <i class="fas fa-magic sound-icon"></i>
+                <div class="sound-title">Magic Spell</div>
+                <div class="sound-description">Fantasy casting</div>
+            </div>
+
+            <div class="sound-button" data-category="effects" data-sound="jump">
+                <i class="fas fa-arrow-up sound-icon"></i>
+                <div class="sound-title">Jump</div>
+                <div class="sound-description">Character jump</div>
+            </div>
+
+            <div class="sound-button" data-category="effects" data-sound="hit">
+                <i class="fas fa-fist-raised sound-icon"></i>
+                <div class="sound-title">Punch Hit</div>
+                <div class="sound-description">Combat impact</div>
+            </div>
+
+            <!-- Notification Sounds -->
+            <div class="sound-button" data-category="notifications" data-sound="ding">
+                <i class="fas fa-bell sound-icon"></i>
+                <div class="sound-title">Notification</div>
+                <div class="sound-description">Message alert</div>
+            </div>
+
+            <div class="sound-button" data-category="notifications" data-sound="error">
+                <i class="fas fa-exclamation-triangle sound-icon"></i>
+                <div class="sound-title">Error Beep</div>
+                <div class="sound-description">System error</div>
+            </div>
+
+            <div class="sound-button" data-category="notifications" data-sound="success">
+                <i class="fas fa-check-circle sound-icon"></i>
+                <div class="sound-title">Success</div>
+                <div class="sound-description">Task complete</div>
+            </div>
+
+            <div class="sound-button" data-category="notifications" data-sound="warning">
+                <i class="fas fa-exclamation sound-icon"></i>
+                <div class="sound-title">Warning</div>
+                <div class="sound-description">Caution alert</div>
+            </div>
+
+            <div class="sound-button" data-category="notifications" data-sound="info">
+                <i class="fas fa-info-circle sound-icon"></i>
+                <div class="sound-title">Info Ping</div>
+                <div class="sound-description">Information sound</div>
+            </div>
+
+            <div class="sound-button" data-category="notifications" data-sound="click">
+                <i class="fas fa-mouse-pointer sound-icon"></i>
+                <div class="sound-title">Click</div>
+                <div class="sound-description">UI interaction</div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Floating Bubbles -->
+    <div id="bubbles-container"></div>
+
+    <script>
+        // Initialize Vanta.js background
+        VANTA.NET({
+            el: "#vanta-bg",
+            mouseControls: true,
+            touchControls: true,
+            gyroControls: false,
+            minHeight: 200.00,
+            minWidth: 200.00,
+            scale: 1.00,
+            scaleMobile: 1.00,
+            color: 0xff6b6b,
+            backgroundColor: 0x667eea,
+            points: 8.00,
+            maxDistance: 25.00,
+            spacing: 18.00
+        });
+
+        // Create floating bubbles
+        function createBubbles() {
+            const container = document.getElementById('bubbles-container');
+            const bubbleCount = 12;
+
+            for (let i = 0; i < bubbleCount; i++) {
+                const bubble = document.createElement('div');
+                bubble.className = 'bubble';
+                bubble.style.left = Math.random() * 100 + '%';
+                bubble.style.width = (Math.random() * 20 + 10) + 'px';
+                bubble.style.height = bubble.style.width;
+                bubble.style.animationDelay = Math.random() * 8 + 's';
+                bubble.style.animationDuration = (Math.random() * 4 + 6) + 's';
+                container.appendChild(bubble);
+            }
+        }
+
+        // Enhanced dock interactions
+        const dockItems = document.querySelectorAll('.dock-item');
+        
+        dockItems.forEach(item => {
+            item.addEventListener('mouseenter', function() {
+                this.style.transform = 'scale(1.15) translateY(-8px)';
+            });
+            
+            item.addEventListener('mouseleave', function() {
+                if (!this.classList.contains('active')) {
+                    this.style.transform = 'scale(1) translateY(0)';
+                }
+            });
+        });
+
+        // Sound filtering
+        const categoryBtns = document.querySelectorAll('.category-btn');
+        const soundButtons = document.querySelectorAll('.sound-button');
+
+        categoryBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                // Update active button
+                categoryBtns.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+
+                const category = btn.dataset.category;
+                
+                // Filter sounds
+                soundButtons.forEach(button => {
+                    if (category === 'all' || button.dataset.category === category) {
+                        button.style.display = 'block';
+                        button.style.animation = 'fadeIn 0.5s ease';
+                    } else {
+                        button.style.display = 'none';
+                    }
+                });
+            });
+        });
+
+        // Sound button functionality
+        soundButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                const soundName = this.querySelector('.sound-title').textContent;
+                
+                // Remove playing class from all buttons
+                soundButtons.forEach(btn => btn.classList.remove('playing'));
+                
+                // Add playing class to clicked button
+                this.classList.add('playing');
+                
+                // Simulate sound playing
+                setTimeout(() => {
+                    this.classList.remove('playing');
+                }, 2000);
+                
+                // Show notification
+                showNotification(`Playing: ${soundName}`);
+                
+                // Animate visualizer
+                animateVisualizer();
+            });
+        });
+
+        // Visualizer animation
+        function animateVisualizer() {
+            const bars = document.querySelectorAll('.visualizer-bar');
+            
+            bars.forEach(bar => {
+                const height = Math.random() * 100 + 20;
+                bar.style.height = height + 'px';
+            });
+        }
+
+        // Start visualizer animation
+        setInterval(animateVisualizer, 200);
+
+        // Volume control
+        const volumeSlider = document.querySelector('.volume-slider');
+        const volumeFill = document.querySelector('.volume-fill');
+
+        volumeSlider.addEventListener('click', function(e) {
+            const rect = this.getBoundingClientRect();
+            const percent = (e.clientX - rect.left) / rect.width;
+            volumeFill.style.width = (percent * 100) + '%';
+        });
+
+        // Notification system
+        function showNotification(message) {
+            const notification = document.createElement('div');
+            notification.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
+                color: white;
+                padding: 1rem 2rem;
+                border-radius: 25px;
+                font-weight: 600;
+                z-index: 10000;
+                box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+                transform: translateX(100%);
+                transition: transform 0.3s ease;
+            `;
+            notification.textContent = message;
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.style.transform = 'translateX(0)';
+            }, 100);
+            
+            setTimeout(() => {
+                notification.style.transform = 'translateX(100%)';
+                setTimeout(() => {
+                    notification.remove();
+                }, 300);
+            }, 3000);
+        }
+
+        // Initialize bubbles
+        createBubbles();
+
+        // Add fade in animation
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes fadeIn {
+                from { opacity: 0; transform: translateY(20px); }
+                to { opacity: 1; transform: translateY(0); }
+            }
+        `;
+        document.head.appendChild(style);
+    </script>
+</body>
+</html>

@@ -1,54 +1,133 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <link rel="icon" href=".github/14145B44-3DF5-4218-BED6-FF5D011DC7F7-modified.png" type="image/x-icon">
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Typical Productions - Projects</title>
-    <style>
-        /* Basic Styling (you would expand this in a separate styles.css file) */
-        body { font-family: sans-serif; margin: 0; padding: 20px; background-color: #f4f4f4; }
-        header { text-align: center; padding: 40px 20px; background-color: #fff; border-bottom: 1px solid #ddd; }
-        h1 { color: #333; }
-        .project-container { display: flex; flex-wrap: wrap; justify-content: center; gap: 20px; padding: 20px; }
-        .project-card { background-color: #fff; border: 1px solid #ddd; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); width: 300px; overflow: hidden; text-align: center; }
-        .project-card img { width: 100%; height: 200px; object-fit: cover; }
-        .project-info { padding: 15px; }
-        .project-info h2 { margin: 0 0 10px; font-size: 1.2em; }
-        .project-info p { font-size: 0.9em; color: #666; }
-    </style>
+<link rel="icon" type="image/png" href="favicon.png">
+<meta charset="UTF-8">
+<title>Typical Productions</title>
+<style>
+    body {
+        margin: 0;
+        font-family: Arial, sans-serif;
+        background: linear-gradient(135deg, #8ef3a5, #2e7d32);
+        color: #fff;
+        overflow-x: hidden;
+    }
+
+    header {
+        text-align: center;
+        padding: 40px 10px;
+        font-size: 50px;
+        font-weight: bold;
+        text-shadow: 2px 2px 8px rgba(0,0,0,0.5);
+        letter-spacing: 3px;
+    }
+
+    .container {
+        display: grid;
+        grid-template-columns: repeat(5, 1fr);
+        gap: 20px;
+        padding: 30px;
+    }
+
+    .box {
+        background: rgba(255,255,255,0.15);
+        border-radius: 15px;
+        padding: 15px;
+        text-align: center;
+        box-shadow: 0 4px 14px rgba(0,0,0,0.4);
+        backdrop-filter: blur(5px);
+        transition: transform .2s, box-shadow .2s;
+    }
+
+    .box:hover {
+        transform: scale(1.05);
+        box-shadow: 0 8px 20px rgba(0,0,0,0.6);
+    }
+
+    .box img {
+        width: 100%;
+        border-radius: 10px;
+        margin-bottom: 10px;
+    }
+
+    .box h3 {
+        margin: 0;
+        font-size: 20px;
+        color: #e3ffe3;
+        text-shadow: 0 0 5px black;
+    }
+
+    footer {
+        text-align: center;
+        padding: 20px;
+        opacity: 0.7;
+        font-size: 14px;
+        margin-top: 20px;
+    }
+</style>
 </head>
+
 <body>
 
-    <header>
-        <h1>Welcome to Typical Productions</h1>
-        <p>A showcase of my creative projects and work.</p>
-    </header>
+<header>Typical Productions</header>
 
-    <main class="project-container">
-        <!-- Project 1 -->
-        <div class="project-card">
-            <img src="placeholder-image-1.jpg" alt="Project 1 Thumbnail">
-            <div class="project-info">
-                <h2>Project Title One</h2>
-                <p>A brief description of this project. Click here to learn more.</p>
-                <a href="project-one-details.html">View Details</a>
-            </div>
-        </div>
+<div class="container">
 
-        <!-- Project 2 -->
-        <div class="project-card">
-            <img src="placeholder-image-2.jpg" alt="Project 2 Thumbnail">
-            <div class="project-info">
-                <h2>Project Title Two</h2>
-                <p>Another description of a second project, perhaps a film or design piece.</p>
-                <a href="project-two-details.html">View Details</a>
-            </div>
-        </div>
-        
-        <!-- Add more project cards as needed -->
+    <div class="box">
+        <img src="https://picsum.photos/300/200?1">
+        <h3>1.Ome's typical site/h3>
+    </div>
 
-    </main>
+    <div class="box">
+        <img src="https://picsum.photos/300/200?2">
+        <h3>2.Typical Productions</h3>
+    </div>
+
+    <div class="box">
+        <img src="https://picsum.photos/300/200?3">
+        <h3>3.Arcadium</h3>
+    </div>
+
+    <div class="box">
+        <img src="https://picsum.photos/300/200?4">
+        <h3>Arcadium OS</h3>
+    </div>
+
+    <div class="box">
+        <img src="https://picsum.photos/300/200?5">
+        <h3>Project Five</h3>
+    </div>
+
+    <div class="box">
+        <img src="https://picsum.photos/300/200?6">
+        <h3>Project Six</h3>
+    </div>
+
+    <div class="box">
+        <img src="https://picsum.photos/300/200?7">
+        <h3>Project Seven</h3>
+    </div>
+
+    <div class="box">
+        <img src="https://picsum.photos/300/200?8">
+        <h3>Project Eight</h3>
+    </div>
+
+    <div class="box">
+        <img src="https://picsum.photos/300/200?9">
+        <h3>Project Nine</h3>
+    </div>
+
+    <div class="box">
+        <img src="https://picsum.photos/300/200?10">
+        <h3>Project Ten</h3>
+    </div>
+
+</div>
+
+<footer>
+    © 2025 Typical Productions — All Rights Reserved
+</footer>
 
 </body>
 </html>

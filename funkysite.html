@@ -3,11 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The Funky Site</title>
+    <title>GameHub - Ultimate Gaming Portal</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/vanta/0.5.24/vanta.birds.min.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/vanta/0.5.24/vanta.net.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Orbitron:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         * {
@@ -18,73 +18,107 @@
 
         body {
             font-family: 'Inter', sans-serif;
-            background: linear-gradient(135deg, #0f0c29 0%, #302b63 50%, #24243e 100%);
-            min-height: 100vh;
+            background: #0a0a0a;
+            color: #ffffff;
             overflow-x: hidden;
-            position: relative;
         }
 
-        .galaxy-bg {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(135deg, #0f0c29 0%, #302b63 50%, #24243e 100%);
-            z-index: -2;
-        }
-
-        .stars {
+        .vanta-bg {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
             z-index: -1;
-            pointer-events: none;
         }
 
-        .star {
-            position: absolute;
-            width: 2px;
-            height: 2px;
-            background: white;
-            border-radius: 50%;
-            animation: twinkle 3s infinite;
+        /* Navigation */
+        .nav-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            background: rgba(10, 10, 10, 0.9);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(0, 255, 255, 0.2);
         }
 
-        @keyframes twinkle {
-            0%, 100% { opacity: 0; }
-            50% { opacity: 1; }
+        .nav-content {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 1rem 2rem;
+            max-width: 1400px;
+            margin: 0 auto;
         }
 
+        .logo {
+            font-family: 'Orbitron', monospace;
+            font-size: 1.8rem;
+            font-weight: 800;
+            background: linear-gradient(45deg, #00ffff, #ff00ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-shadow: 0 0 30px rgba(0, 255, 255, 0.5);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+        }
+
+        .nav-link {
+            color: #ffffff;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            position: relative;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+        }
+
+        .nav-link:hover {
+            color: #00ffff;
+            background: rgba(0, 255, 255, 0.1);
+            box-shadow: 0 0 20px rgba(0, 255, 255, 0.3);
+        }
+
+        .nav-link.active {
+            color: #00ffff;
+            background: rgba(0, 255, 255, 0.2);
+        }
+
+        /* Hero Section */
         .hero-section {
+            min-height: 100vh;
             display: flex;
             align-items: center;
             justify-content: center;
-            min-height: 100vh;
             text-align: center;
-            color: white;
             position: relative;
-        }
-
-        .hero-content {
-            z-index: 10;
-            max-width: 800px;
             padding: 2rem;
         }
 
+        .hero-content {
+            max-width: 1000px;
+            z-index: 10;
+        }
+
         .hero-title {
-            font-family: 'Playfair Display', serif;
+            font-family: 'Orbitron', monospace;
             font-size: clamp(3rem, 8vw, 6rem);
-            font-weight: 700;
+            font-weight: 800;
             margin-bottom: 1rem;
-            background: linear-gradient(45deg, #60a5fa, #a78bfa, #ec4899);
+            background: linear-gradient(45deg, #00ffff, #ff00ff, #ffff00);
             background-size: 200% 200%;
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
             animation: gradient-shift 3s ease-in-out infinite;
+            text-shadow: 0 0 50px rgba(0, 255, 255, 0.5);
         }
 
         @keyframes gradient-shift {
@@ -106,137 +140,57 @@
             line-height: 1.6;
         }
 
+        .cta-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
         .cta-button {
-            background: linear-gradient(45deg, #3b82f6, #8b5cf6);
+            background: linear-gradient(45deg, #00ffff, #0080ff);
             border: none;
-            padding: 1rem 2.5rem;
+            padding: 1rem 2rem;
             border-radius: 50px;
             color: white;
-            font-size: 1.1rem;
+            font-size: 1rem;
             font-weight: 600;
             cursor: pointer;
             transition: all 0.3s ease;
-            box-shadow: 0 10px 30px rgba(59, 130, 246, 0.3);
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            box-shadow: 0 10px 30px rgba(0, 255, 255, 0.3);
         }
 
         .cta-button:hover {
             transform: translateY(-3px);
-            box-shadow: 0 15px 40px rgba(59, 130, 246, 0.4);
+            box-shadow: 0 15px 40px rgba(0, 255, 255, 0.4);
         }
 
-        /* Apple-style Mac Navigation */
-        .mac-dock {
-            position: fixed;
-            bottom: 20px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            border-radius: 20px;
-            padding: 12px 20px;
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            z-index: 1000;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        .cta-button.secondary {
+            background: linear-gradient(45deg, #ff00ff, #ff0080);
+            box-shadow: 0 10px 30px rgba(255, 0, 255, 0.3);
         }
 
-        .dock-item {
-            width: 50px;
-            height: 50px;
-            background: rgba(255, 255, 255, 0.2);
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            position: relative;
-            color: white;
-            text-decoration: none;
+        .cta-button.secondary:hover {
+            box-shadow: 0 15px 40px rgba(255, 0, 255, 0.4);
         }
 
-        .dock-item:hover {
-            transform: scale(1.2) translateY(-5px);
-            background: rgba(255, 255, 255, 0.3);
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
-        }
-
-        .dock-item i {
-            font-size: 1.5rem;
-        }
-
-        .dock-item::after {
-            content: attr(data-label);
-            position: absolute;
-            bottom: 100%;
-            left: 50%;
-            transform: translateX(-50%);
-            background: rgba(0, 0, 0, 0.8);
-            color: white;
-            padding: 5px 10px;
-            border-radius: 5px;
-            font-size: 0.8rem;
-            white-space: nowrap;
-            opacity: 0;
-            pointer-events: none;
-            transition: opacity 0.3s;
-            margin-bottom: 10px;
-        }
-
-        .dock-item:hover::after {
-            opacity: 1;
-        }
-
-        /* Floating particles */
-        .particle {
-            position: absolute;
-            width: 4px;
-            height: 4px;
-            background: linear-gradient(45deg, #60a5fa, #a78bfa);
-            border-radius: 50%;
-            pointer-events: none;
-            animation: float 6s infinite ease-in-out;
-        }
-
-        @keyframes float {
-            0%, 100% { transform: translateY(0px) rotate(0deg); opacity: 0; }
-            50% { transform: translateY(-100px) rotate(180deg); opacity: 1; }
-        }
-
-        /* Responsive Design */
-        @media (max-width: 768px) {
-            .mac-dock {
-                bottom: 10px;
-                padding: 10px 15px;
-                gap: 12px;
-            }
-            
-            .dock-item {
-                width: 45px;
-                height: 45px;
-            }
-            
-            .dock-item i {
-                font-size: 1.3rem;
-            }
-        }
-
-        /* Content sections */
-        .content-section {
-            padding: 4rem 2rem;
-            max-width: 1200px;
+        /* Features Section */
+        .features-section {
+            padding: 6rem 2rem;
+            max-width: 1400px;
             margin: 0 auto;
-            color: white;
         }
 
         .section-title {
-            font-family: 'Playfair Display', serif;
+            font-family: 'Orbitron', monospace;
             font-size: 2.5rem;
             text-align: center;
             margin-bottom: 3rem;
-            background: linear-gradient(45deg, #60a5fa, #a78bfa);
+            background: linear-gradient(45deg, #00ffff, #ff00ff);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
@@ -250,163 +204,362 @@
         }
 
         .feature-card {
-            background: rgba(255, 255, 255, 0.1);
+            background: rgba(255, 255, 255, 0.05);
             backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            border-radius: 15px;
+            border: 1px solid rgba(0, 255, 255, 0.2);
+            border-radius: 20px;
             padding: 2rem;
             text-align: center;
             transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .feature-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(45deg, transparent 30%, rgba(0,255,255,0.1) 50%, transparent 70%);
+            transform: translateX(-100%);
+            transition: transform 0.6s;
+        }
+
+        .feature-card:hover::before {
+            transform: translateX(100%);
         }
 
         .feature-card:hover {
-            transform: translateY(-5px);
-            background: rgba(255, 255, 255, 0.15);
-            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+            transform: translateY(-10px);
+            border-color: rgba(0, 255, 255, 0.5);
+            box-shadow: 0 20px 40px rgba(0, 255, 255, 0.2);
         }
 
         .feature-icon {
             font-size: 3rem;
             margin-bottom: 1rem;
-            background: linear-gradient(45deg, #60a5fa, #a78bfa);
+            background: linear-gradient(45deg, #00ffff, #ff00ff);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
+            position: relative;
+            z-index: 1;
         }
 
         .feature-title {
             font-size: 1.3rem;
             font-weight: 600;
             margin-bottom: 1rem;
+            position: relative;
+            z-index: 1;
         }
 
         .feature-description {
             opacity: 0.8;
             line-height: 1.6;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Stats Section */
+        .stats-section {
+            padding: 4rem 2rem;
+            background: rgba(0, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+        }
+
+        .stats-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+        }
+
+        .stat-card {
+            text-align: center;
+            padding: 2rem;
+        }
+
+        .stat-number {
+            font-family: 'Orbitron', monospace;
+            font-size: 3rem;
+            font-weight: 800;
+            background: linear-gradient(45deg, #00ffff, #ff00ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            opacity: 0.8;
+            font-size: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* Mobile Menu */
+        .mobile-menu-toggle {
+            display: none;
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+                position: absolute;
+                top: 100%;
+                left: 0;
+                right: 0;
+                background: rgba(10, 10, 10, 0.95);
+                backdrop-filter: blur(20px);
+                flex-direction: column;
+                padding: 2rem;
+                border-top: 1px solid rgba(0, 255, 255, 0.2);
+            }
+
+            .nav-links.active {
+                display: flex;
+            }
+
+            .mobile-menu-toggle {
+                display: block;
+            }
+
+            .hero-title {
+                font-size: 3rem;
+            }
+
+            .cta-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .features-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .stats-container {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        /* Scroll animations */
+        .fade-in {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.6s ease;
+        }
+
+        .fade-in.visible {
+            opacity: 1;
+            transform: translateY(0);
         }
     </style>
 </head>
 <body>
-    <div class="galaxy-bg"></div>
-    <div class="stars" id="stars"></div>
+    <div class="vanta-bg" id="vanta-bg"></div>
 
-    <nav class="mac-dock">
-        <a href="index.html" class="dock-item" data-label="Home">
-            <i class="fas fa-home"></i>
-        </a>
-        <a href="about.html" class="dock-item" data-label="About">
-            <i class="fas fa-user"></i>
-        </a>
-        <a href="gallery.html" class="dock-item" data-label="Gallery">
-            <i class="fas fa-images"></i>
-        </a>
-        <a href="contact.html" class="dock-item" data-label="Contact">
-            <i class="fas fa-envelope"></i>
-        </a>
+    <!-- Navigation -->
+    <nav class="nav-container">
+        <div class="nav-content">
+            <div class="logo">GameHub</div>
+            <ul class="nav-links" id="navLinks">
+                <li><a href="index.html" class="nav-link active">Home</a></li>
+                <li><a href="games.html" class="nav-link">Games</a></li>
+                <li><a href="proxies.html" class="nav-link">Proxies</a></li>
+                <li><a href="music.html" class="nav-link">Music</a></li>
+                <li><a href="movies.html" class="nav-link">Movies</a></li>
+                <li><a href="game-sites.html" class="nav-link">Game Sites</a></li>
+                <li><a href="website.html" class="nav-link">Website</a></li>
+                <li><a href="soundboard.html" class="nav-link">Soundboard</a></li>
+                <li><a href="chat.html" class="nav-link">Chat</a></li>
+            </ul>
+            <button class="mobile-menu-toggle" id="mobileMenuToggle">
+                <i class="fas fa-bars"></i>
+            </button>
+        </div>
     </nav>
 
+    <!-- Hero Section -->
     <section class="hero-section">
         <div class="hero-content">
-            <h1 class="hero-title">The Funky Site</h1>
-            <p class="hero-subtitle">Welcome to the Galaxy</p>
+            <h1 class="hero-title">GameHub</h1>
+            <p class="hero-subtitle">Ultimate Gaming Portal</p>
             <p class="hero-description">
-                Experience the cosmos with our stunning blue and purple galaxy theme. 
-                Navigate through the universe with our sleek Mac-inspired interface.
+                Dive into the ultimate gaming experience with our comprehensive portal. 
+                From games and proxies to music and movies - everything you need in one cosmic interface.
             </p>
-            <button class="cta-button" onclick="scrollToContent()">
-                Explore the Universe
-            </button>
+            <div class="cta-buttons">
+                <a href="games.html" class="cta-button">
+                    <i class="fas fa-gamepad"></i>
+                    Start Gaming
+                </a>
+                <a href="proxies.html" class="cta-button secondary">
+                    <i class="fas fa-shield-alt"></i>
+                    Access Proxies
+                </a>
+            </div>
         </div>
     </section>
 
-    <section class="content-section" id="features">
-        <h2 class="section-title">Cosmic Features</h2>
+    <!-- Features Section -->
+    <section class="features-section">
+        <h2 class="section-title fade-in">Gaming Universe</h2>
         <div class="features-grid">
-            <div class="feature-card">
+            <div class="feature-card fade-in">
                 <div class="feature-icon">
-                    <i class="fas fa-rocket"></i>
+                    <i class="fas fa-gamepad"></i>
                 </div>
-                <h3 class="feature-title">Stellar Navigation</h3>
+                <h3 class="feature-title">Epic Games</h3>
                 <p class="feature-description">
-                    Smooth and intuitive navigation system inspired by Apple's macOS dock, 
-                    floating elegantly at the bottom of your screen.
+                    Access a vast collection of games from classic arcade to modern AAA titles. 
+                    Play instantly with our cloud gaming technology.
                 </p>
             </div>
-            
-            <div class="feature-card">
+
+            <div class="feature-card fade-in">
                 <div class="feature-icon">
-                    <i class="fas fa-palette"></i>
+                    <i class="fas fa-shield-alt"></i>
                 </div>
-                <h3 class="feature-title">Galaxy Aesthetics</h3>
+                <h3 class="feature-title">Secure Proxies</h3>
                 <p class="feature-description">
-                    Immerse yourself in a beautiful blue and purple galaxy theme 
-                    with animated stars and cosmic particle effects.
+                    Browse safely with our high-speed proxy network. 
+                    Access restricted content and maintain your privacy online.
                 </p>
             </div>
-            
-            <div class="feature-card">
+
+            <div class="feature-card fade-in">
                 <div class="feature-icon">
-                    <i class="fas fa-star"></i>
+                    <i class="fas fa-music"></i>
                 </div>
-                <h3 class="feature-title">Interactive Experience</h3>
+                <h3 class="feature-title">Gaming Music</h3>
                 <p class="feature-description">
-                    Engage with smooth animations, hover effects, and dynamic visual 
-                    elements that respond to your interactions.
+                    Stream unlimited gaming soundtracks and playlists. 
+                    Create your perfect gaming atmosphere with our music library.
                 </p>
+            </div>
+
+            <div class="feature-card fade-in">
+                <div class="feature-icon">
+                    <i class="fas fa-film"></i>
+                </div>
+                <h3 class="feature-title">Gaming Movies</h3>
+                <p class="feature-description">
+                    Watch gaming documentaries, esports tournaments, and game-inspired movies. 
+                    Entertainment for true gamers.
+                </p>
+            </div>
+
+            <div class="feature-card fade-in">
+                <div class="feature-icon">
+                    <i class="fas fa-volume-up"></i>
+                </div>
+                <h3 class="feature-title">Soundboard</h3>
+                <p class="feature-description">
+                    Access thousands of gaming sound effects and memes. 
+                    Perfect for streaming, content creation, or just having fun.
+                </p>
+            </div>
+
+            <div class="feature-card fade-in">
+                <div class="feature-icon">
+                    <i class="fas fa-comments"></i>
+                </div>
+                <h3 class="feature-title">Gaming Chat</h3>
+                <p class="feature-description">
+                    Connect with gamers worldwide in our real-time chat rooms. 
+                    Discuss strategies, find teammates, and make friends.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Stats Section -->
+    <section class="stats-section">
+        <div class="stats-container">
+            <div class="stat-card fade-in">
+                <div class="stat-number">1000+</div>
+                <div class="stat-label">Games Available</div>
+            </div>
+            <div class="stat-card fade-in">
+                <div class="stat-number">50+</div>
+                <div class="stat-label">Proxy Servers</div>
+            </div>
+            <div class="stat-card fade-in">
+                <div class="stat-number">10K+</div>
+                <div class="stat-label">Music Tracks</div>
+            </div>
+            <div class="stat-card fade-in">
+                <div class="stat-number">500+</div>
+                <div class="stat-label">Active Users</div>
             </div>
         </div>
     </section>
 
     <script>
-        // Create animated stars
-        function createStars() {
-            const starsContainer = document.getElementById('stars');
-            const numberOfStars = 100;
-
-            for (let i = 0; i < numberOfStars; i++) {
-                const star = document.createElement('div');
-                star.className = 'star';
-                star.style.left = Math.random() * 100 + '%';
-                star.style.top = Math.random() * 100 + '%';
-                star.style.animationDelay = Math.random() * 3 + 's';
-                starsContainer.appendChild(star);
-            }
-        }
-
-        // Create floating particles
-        function createParticles() {
-            const particleCount = 20;
-            
-            for (let i = 0; i < particleCount; i++) {
-                const particle = document.createElement('div');
-                particle.className = 'particle';
-                particle.style.left = Math.random() * 100 + '%';
-                particle.style.animationDelay = Math.random() * 6 + 's';
-                particle.style.animationDuration = (Math.random() * 3 + 3) + 's';
-                document.body.appendChild(particle);
-            }
-        }
-
-        // Smooth scroll to content
-        function scrollToContent() {
-            document.getElementById('features').scrollIntoView({
-                behavior: 'smooth'
-            });
-        }
-
-        // Initialize animations
-        document.addEventListener('DOMContentLoaded', function() {
-            createStars();
-            createParticles();
+        // Initialize Vanta.js background
+        VANTA.NET({
+            el: "#vanta-bg",
+            mouseControls: true,
+            touchControls: true,
+            gyroControls: false,
+            minHeight: 200.00,
+            minWidth: 200.00,
+            scale: 1.00,
+            scaleMobile: 1.00,
+            color: 0x00ffff,
+            backgroundColor: 0x0a0a0a,
+            points: 8.00,
+            maxDistance: 25.00,
+            spacing: 18.00
         });
 
-        // Add scroll effects
-        window.addEventListener('scroll', function() {
-            const scrolled = window.pageYOffset;
-            const parallax = document.querySelector('.galaxy-bg');
-            const speed = scrolled * 0.5;
-            
-            parallax.style.transform = `translateY(${speed}px)`;
+        // Mobile menu toggle
+        const mobileMenuToggle = document.getElementById('mobileMenuToggle');
+        const navLinks = document.getElementById('navLinks');
+
+        mobileMenuToggle.addEventListener('click', () => {
+            navLinks.classList.toggle('active');
+        });
+
+        // Scroll animations
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.fade-in').forEach(el => {
+            observer.observe(el);
+        });
+
+        // Smooth scrolling for navigation links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
         });
     </script>
 </body>

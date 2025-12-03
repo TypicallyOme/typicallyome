@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Arcadium OS</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="background-container">
+        <!-- Some background elements to make the glass effect visible -->
+        <div class="bg-shape blue-shape"></div>
+        <div class="bg-shape purple-shape"></div>
+        <div class="bg-shape light-blue-shape"></div>
+
+        <header class="top-bar">
+            <div class="logo-name">Arcadium OS</div>
+            <nav class="nav-links">
+                <!-- Placeholder links to mimic the layout -->
+                <a href="#">Home</a>
+                <a href="#">Settings</a>
+                <a href="#">Files</a>
+                <a href="#">Store</a>
+                <a href="#">Profile</a>
+            </nav>
+        </header>
+
+        <main class="main-content">
+            <h1>Welcome to Arcadium OS</h1>
+            <p>This is your main content area.</p>
+        </main>
+    </div>
+</body>
+</html>

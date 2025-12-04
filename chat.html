@@ -1,0 +1,814 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat - GameHub</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Orbitron:wght@400;500;600;700;800&family=Quicksand:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Quicksand', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #ffffff;
+            overflow-x: hidden;
+            min-height: 100vh;
+        }
+
+        .vanta-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+        }
+
+        /* Apple Mac App Navigation */
+        .mac-dock {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(255, 255, 255, 0.25);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 25px;
+            padding: 12px 20px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            z-index: 1000;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease;
+        }
+
+        .dock-item {
+            width: 60px;
+            height: 60px;
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            color: white;
+            text-decoration: none;
+            font-size: 1.5rem;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .dock-item:hover {
+            transform: scale(1.15) translateY(-8px);
+            background: rgba(255, 255, 255, 0.4);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
+        }
+
+        .dock-item.active {
+            background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
+            box-shadow: 0 0 30px rgba(255, 107, 107, 0.5);
+        }
+
+        .dock-item::after {
+            content: attr(data-label);
+            position: absolute;
+            bottom: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0, 0, 0, 0.8);
+            color: white;
+            padding: 8px 12px;
+            border-radius: 8px;
+            font-size: 0.8rem;
+            white-space: nowrap;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s;
+            margin-bottom: 15px;
+            font-family: 'Inter', sans-serif;
+            font-weight: 500;
+        }
+
+        .dock-item:hover::after {
+            opacity: 1;
+        }
+
+        /* Chat Container */
+        .chat-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 6rem 2rem 8rem;
+            display: grid;
+            grid-template-columns: 300px 1fr;
+            gap: 2rem;
+            height: 80vh;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(20px);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 25px;
+            padding: 2rem;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .sidebar-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 2rem;
+            background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-align: center;
+        }
+
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            margin-bottom: 2rem;
+        }
+
+        .user-avatar {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            color: white;
+        }
+
+        .user-info {
+            flex: 1;
+        }
+
+        .user-name {
+            font-weight: 600;
+            margin-bottom: 0.2rem;
+        }
+
+        .user-status {
+            font-size: 0.8rem;
+            opacity: 0.7;
+        }
+
+        .online-users {
+            flex: 1;
+        }
+
+        .online-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: #4ecdc4;
+        }
+
+        .user-item {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            padding: 0.5rem;
+            border-radius: 10px;
+            margin-bottom: 0.5rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .user-item:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .user-avatar-small {
+            width: 35px;
+            height: 35px;
+            background: linear-gradient(45deg, #45b7d1, #96ceb4);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1rem;
+            color: white;
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            background: #00ff00;
+            border-radius: 50%;
+            margin-left: auto;
+        }
+
+        /* Chat Area */
+        .chat-area {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(20px);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 25px;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .chat-header {
+            padding: 1.5rem 2rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .chat-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .chat-subtitle {
+            font-size: 0.9rem;
+            opacity: 0.7;
+        }
+
+        .chat-messages {
+            flex: 1;
+            padding: 1.5rem 2rem;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .message {
+            display: flex;
+            gap: 1rem;
+            animation: messageSlide 0.3s ease;
+        }
+
+        @keyframes messageSlide {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .message.own {
+            flex-direction: row-reverse;
+        }
+
+        .message-avatar {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(45deg, #45b7d1, #96ceb4);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1rem;
+            color: white;
+            flex-shrink: 0;
+        }
+
+        .message.own .message-avatar {
+            background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
+        }
+
+        .message-content {
+            max-width: 70%;
+        }
+
+        .message-header {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 0.3rem;
+        }
+
+        .message-author {
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        .message-time {
+            font-size: 0.7rem;
+            opacity: 0.6;
+        }
+
+        .message-text {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 0.8rem 1rem;
+            border-radius: 15px;
+            font-size: 0.95rem;
+            line-height: 1.4;
+        }
+
+        .message.own .message-text {
+            background: linear-gradient(45deg, rgba(255, 107, 107, 0.3), rgba(78, 205, 196, 0.3));
+        }
+
+        .chat-input-area {
+            padding: 1.5rem 2rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.2);
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .chat-input {
+            flex: 1;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 25px;
+            padding: 0.8rem 1.5rem;
+            color: white;
+            font-size: 1rem;
+            font-family: 'Quicksand', sans-serif;
+            outline: none;
+            transition: all 0.3s ease;
+        }
+
+        .chat-input:focus {
+            border-color: rgba(255, 255, 255, 0.4);
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        .chat-input::placeholder {
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        .send-button {
+            background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
+            border: none;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+        }
+
+        .send-button:hover {
+            transform: scale(1.1);
+            box-shadow: 0 10px 20px rgba(255, 107, 107, 0.3);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .mac-dock {
+                bottom: 10px;
+                padding: 10px 15px;
+                gap: 12px;
+            }
+            
+            .dock-item {
+                width: 50px;
+                height: 50px;
+                font-size: 1.3rem;
+            }
+
+            .chat-container {
+                grid-template-columns: 1fr;
+                padding: 4rem 1rem 8rem;
+                height: auto;
+            }
+
+            .sidebar {
+                display: none;
+            }
+
+            .chat-area {
+                height: 70vh;
+            }
+        }
+
+        /* Floating Animation */
+        .floating {
+            animation: float 6s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+        }
+
+        /* Bubble Effect */
+        .bubble {
+            position: absolute;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            pointer-events: none;
+            animation: bubble-float 8s infinite ease-in-out;
+        }
+
+        @keyframes bubble-float {
+            0% { transform: translateY(100vh) scale(0); opacity: 0; }
+            10% { opacity: 1; }
+            90% { opacity: 1; }
+            100% { transform: translateY(-100px) scale(1); opacity: 0; }
+        }
+    </style>
+</head>
+<body>
+    <div class="vanta-bg" id="vanta-bg"></div>
+
+    <!-- Apple Mac App Navigation -->
+    <nav class="mac-dock">
+        <a href="index.html" class="dock-item" data-label="🏠 Home">
+            <i class="fas fa-home"></i>
+        </a>
+        <a href="games.html" class="dock-item" data-label="🎮 Games">
+            <i class="fas fa-gamepad"></i>
+        </a>
+        <a href="proxies.html" class="dock-item" data-label="🔒 Proxies">
+            <i class="fas fa-shield-alt"></i>
+        </a>
+        <a href="music.html" class="dock-item" data-label="🎵 Music">
+            <i class="fas fa-music"></i>
+        </a>
+        <a href="movies.html" class="dock-item" data-label="🎬 Movies">
+            <i class="fas fa-film"></i>
+        </a>
+        <a href="game-sites.html" class="dock-item" data-label="🌐 Game Sites">
+            <i class="fas fa-globe"></i>
+        </a>
+        <a href="website.html" class="dock-item" data-label="💻 Website">
+            <i class="fas fa-code"></i>
+        </a>
+        <a href="soundboard.html" class="dock-item" data-label="🔊 Soundboard">
+            <i class="fas fa-volume-up"></i>
+        </a>
+        <a href="chat.html" class="dock-item active" data-label="💬 Chat">
+            <i class="fas fa-comments"></i>
+        </a>
+    </nav>
+
+    <!-- Chat Container -->
+    <div class="chat-container">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <h2 class="sidebar-title">GameHub Chat</h2>
+            
+            <div class="user-profile">
+                <div class="user-avatar">
+                    <i class="fas fa-user"></i>
+                </div>
+                <div class="user-info">
+                    <div class="user-name">GamerPro2024</div>
+                    <div class="user-status">Online</div>
+                </div>
+            </div>
+
+            <div class="online-users">
+                <h3 class="online-title">Online Users (247)</h3>
+                
+                <div class="user-item">
+                    <div class="user-avatar-small">
+                        <i class="fas fa-gamepad"></i>
+                    </div>
+                    <div class="user-info">
+                        <div class="user-name">NinjaGamer</div>
+                    </div>
+                    <div class="status-dot"></div>
+                </div>
+
+                <div class="user-item">
+                    <div class="user-avatar-small">
+                        <i class="fas fa-trophy"></i>
+                    </div>
+                    <div class="user-info">
+                        <div class="user-name">EpicPlayer</div>
+                    </div>
+                    <div class="status-dot"></div>
+                </div>
+
+                <div class="user-item">
+                    <div class="user-avatar-small">
+                        <i class="fas fa-rocket"></i>
+                    </div>
+                    <div class="user-info">
+                        <div class="user-name">SpaceExplorer</div>
+                    </div>
+                    <div class="status-dot"></div>
+                </div>
+
+                <div class="user-item">
+                    <div class="user-avatar-small">
+                        <i class="fas fa-magic"></i>
+                    </div>
+                    <div class="user-info">
+                        <div class="user-name">WizardGamer</div>
+                    </div>
+                    <div class="status-dot"></div>
+                </div>
+
+                <div class="user-item">
+                    <div class="user-avatar-small">
+                        <i class="fas fa-dragon"></i>
+                    </div>
+                    <div class="user-info">
+                        <div class="user-name">DragonSlayer</div>
+                    </div>
+                    <div class="status-dot"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Chat Area -->
+        <div class="chat-area">
+            <div class="chat-header">
+                <div>
+                    <h2 class="chat-title"># General Gaming</h2>
+                    <p class="chat-subtitle">247 members, 89 online</p>
+                </div>
+            </div>
+
+            <div class="chat-messages" id="chatMessages">
+                <div class="message">
+                    <div class="message-avatar">
+                        <i class="fas fa-gamepad"></i>
+                    </div>
+                    <div class="message-content">
+                        <div class="message-header">
+                            <span class="message-author">NinjaGamer</span>
+                            <span class="message-time">10:30 AM</span>
+                        </div>
+                        <div class="message-text">Hey everyone! Just got the new Cyber Nexus 2099, it's absolutely amazing! 🔥</div>
+                    </div>
+                </div>
+
+                <div class="message">
+                    <div class="message-avatar">
+                        <i class="fas fa-trophy"></i>
+                    </div>
+                    <div class="message-content">
+                        <div class="message-header">
+                            <span class="message-author">EpicPlayer</span>
+                            <span class="message-time">10:32 AM</span>
+                        </div>
+                        <div class="message-text">Nice! How's the gameplay? I've been thinking about getting it too.</div>
+                    </div>
+                </div>
+
+                <div class="message own">
+                    <div class="message-avatar">
+                        <i class="fas fa-user"></i>
+                    </div>
+                    <div class="message-content">
+                        <div class="message-header">
+                            <span class="message-author">GamerPro2024</span>
+                            <span class="message-time">10:35 AM</span>
+                        </div>
+                        <div class="message-text">The graphics are insane! And the story is so immersive. Definitely worth it! 🚀</div>
+                    </div>
+                </div>
+
+                <div class="message">
+                    <div class="message-avatar">
+                        <i class="fas fa-rocket"></i>
+                    </div>
+                    <div class="message-content">
+                        <div class="message-header">
+                            <span class="message-author">SpaceExplorer</span>
+                            <span class="message-time">10:38 AM</span>
+                        </div>
+                        <div class="message-text">Anyone want to team up for the multiplayer mode? Looking for squad members!</div>
+                    </div>
+                </div>
+
+                <div class="message">
+                    <div class="message-avatar">
+                        <i class="fas fa-magic"></i>
+                    </div>
+                    <div class="message-content">
+                        <div class="message-header">
+                            <span class="message-author">WizardGamer</span>
+                            <span class="message-time">10:40 AM</span>
+                        </div>
+                        <div class="message-text">Count me in! I'm pretty good at FPS games. What's your skill level?</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="chat-input-area">
+                <input type="text" class="chat-input" id="chatInput" placeholder="Type your message...">
+                <button class="send-button" id="sendButton">
+                    <i class="fas fa-paper-plane"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Floating Bubbles -->
+    <div id="bubbles-container"></div>
+
+    <script>
+        // Initialize Vanta.js background
+        VANTA.NET({
+            el: "#vanta-bg",
+            mouseControls: true,
+            touchControls: true,
+            gyroControls: false,
+            minHeight: 200.00,
+            minWidth: 200.00,
+            scale: 1.00,
+            scaleMobile: 1.00,
+            color: 0xff6b6b,
+            backgroundColor: 0x667eea,
+            points: 8.00,
+            maxDistance: 25.00,
+            spacing: 18.00
+        });
+
+        // Create floating bubbles
+        function createBubbles() {
+            const container = document.getElementById('bubbles-container');
+            const bubbleCount = 12;
+
+            for (let i = 0; i < bubbleCount; i++) {
+                const bubble = document.createElement('div');
+                bubble.className = 'bubble';
+                bubble.style.left = Math.random() * 100 + '%';
+                bubble.style.width = (Math.random() * 20 + 10) + 'px';
+                bubble.style.height = bubble.style.width;
+                bubble.style.animationDelay = Math.random() * 8 + 's';
+                bubble.style.animationDuration = (Math.random() * 4 + 6) + 's';
+                container.appendChild(bubble);
+            }
+        }
+
+        // Enhanced dock interactions
+        const dockItems = document.querySelectorAll('.dock-item');
+        
+        dockItems.forEach(item => {
+            item.addEventListener('mouseenter', function() {
+                this.style.transform = 'scale(1.15) translateY(-8px)';
+            });
+            
+            item.addEventListener('mouseleave', function() {
+                if (!this.classList.contains('active')) {
+                    this.style.transform = 'scale(1) translateY(0)';
+                }
+            });
+        });
+
+        // Chat functionality
+        const chatInput = document.getElementById('chatInput');
+        const sendButton = document.getElementById('sendButton');
+        const chatMessages = document.getElementById('chatMessages');
+
+        function sendMessage() {
+            const message = chatInput.value.trim();
+            if (message === '') return;
+
+            const messageElement = document.createElement('div');
+            messageElement.className = 'message own';
+            
+            const currentTime = new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+            
+            messageElement.innerHTML = `
+                <div class="message-avatar">
+                    <i class="fas fa-user"></i>
+                </div>
+                <div class="message-content">
+                    <div class="message-header">
+                        <span class="message-author">GamerPro2024</span>
+                        <span class="message-time">${currentTime}</span>
+                    </div>
+                    <div class="message-text">${message}</div>
+                </div>
+            `;
+
+            chatMessages.appendChild(messageElement);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+            
+            chatInput.value = '';
+            
+            // Simulate response after a delay
+            setTimeout(() => {
+                simulateResponse();
+            }, 1000 + Math.random() * 2000);
+        }
+
+        function simulateResponse() {
+            const responses = [
+                "That's awesome! 😎",
+                "I totally agree with you! 👍",
+                "Has anyone tried the new update yet? 🎮",
+                "Looking for teammates for ranked matches! 🏆",
+                "This game is so addictive! 🔥",
+                "Anyone else experiencing lag? 🤔",
+                "Just reached level 50! 🎉",
+                "The graphics in this game are insane! 🤯"
+            ];
+            
+            const users = [
+                { name: "NinjaGamer", icon: "fa-gamepad" },
+                { name: "EpicPlayer", icon: "fa-trophy" },
+                { name: "SpaceExplorer", icon: "fa-rocket" },
+                { name: "WizardGamer", icon: "fa-magic" },
+                { name: "DragonSlayer", icon: "fa-dragon" }
+            ];
+            
+            const randomUser = users[Math.floor(Math.random() * users.length)];
+            const randomResponse = responses[Math.floor(Math.random() * responses.length)];
+            const currentTime = new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+            
+            const messageElement = document.createElement('div');
+            messageElement.className = 'message';
+            
+            messageElement.innerHTML = `
+                <div class="message-avatar">
+                    <i class="fas ${randomUser.icon}"></i>
+                </div>
+                <div class="message-content">
+                    <div class="message-header">
+                        <span class="message-author">${randomUser.name}</span>
+                        <span class="message-time">${currentTime}</span>
+                    </div>
+                    <div class="message-text">${randomResponse}</div>
+                </div>
+            `;
+
+            chatMessages.appendChild(messageElement);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+
+        // Event listeners
+        sendButton.addEventListener('click', sendMessage);
+        
+        chatInput.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                sendMessage();
+            }
+        });
+
+        // Auto-scroll to bottom on load
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+
+        // Initialize bubbles
+        createBubbles();
+
+        // Add some initial messages for demo
+        setTimeout(() => {
+            const welcomeMessages = [
+                "Welcome to GameHub Chat! 🎮",
+                "Feel free to discuss games, find teammates, or just hang out!",
+                "Remember to be respectful to all community members! 😊"
+            ];
+            
+            welcomeMessages.forEach((msg, index) => {
+                setTimeout(() => {
+                    const messageElement = document.createElement('div');
+                    messageElement.className = 'message';
+                    
+                    const currentTime = new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+                    
+                    messageElement.innerHTML = `
+                        <div class="message-avatar">
+                            <i class="fas fa-robot"></i>
+                        </div>
+                        <div class="message-content">
+                            <div class="message-header">
+                                <span class="message-author">GameHub Bot</span>
+                                <span class="message-time">${currentTime}</span>
+                            </div>
+                            <div class="message-text">${msg}</div>
+                        </div>
+                    `;
+                    
+                    chatMessages.appendChild(messageElement);
+                    chatMessages.scrollTop = chatMessages.scrollHeight;
+                }, index * 2000);
+            });
+        }, 3000);
+    </script>
+</body>
+</html>

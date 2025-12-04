@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OVO 1.4.5</title>
+
+<!-- Tailwind + Vanta -->
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/vanta/0.5.24/vanta.net.min.js"></script>
+
+<style>
+    body {
+        font-family: 'Quicksand', sans-serif;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        overflow: hidden;
+        height: 100vh;
+        margin: 0;
+    }
+
+    .glass-box {
+        background: rgba(255,255,255,0.15);
+        border: 1px solid rgba(255,255,255,0.3);
+        backdrop-filter: blur(20px);
+        border-radius: 20px;
+        box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+    }
+
+    .control-btn {
+        background: rgba(255,255,255,0.25);
+        border: 1px solid rgba(255,255,255,0.3);
+        border-radius: 12px;
+        padding: 0.6rem 1.1rem;
+        cursor: pointer;
+        font-weight: 600;
+        transition: .2s;
+    }
+
+    .control-btn:hover {
+        background: rgba(255,255,255,0.4);
+        transform: translateY(-3px);
+    }
+</style>
+</head>
+<body>
+
+<div id="vanta" class="fixed inset-0 -z-10"></div>
+
+<!-- Container -->
+<div class="p-6 h-full flex flex-col gap-4">
+
+    <!-- Header -->
+    <div class="glass-box p-4 text-center text-2xl font-semibold tracking-wide">
+        🔥 OVO 1.4.5 🔥
+    </div>
+
+    <!-- Iframe -->
+    <div class="glass-box flex-1 relative overflow-hidden">
+        <iframe 
+            id="frame"
+            src="https://typicalovo.global.ssl.fastly.net/ovo/1.4.5/"
+            class="w-full h-full rounded-xl border-none"
+            allowfullscreen>
+        </iframe>
+    </div>
+
+    <!-- Controls -->
+    <div class="glass-box p-4 flex gap-4 justify-center">
+
+        <button class="control-btn" onclick="goFullscreen()">
+            ⛶ Fullscreen
+        </button>
+
+        <button class="control-btn" onclick="document.getElementById('frame').src=document.getElementById('frame').src;">
+            🔄 Reload
+        </button>
+
+        <button class="control-btn" onclick="openNewTab()">
+            🔗 Open in new tab
+        </button>
+
+    </div>
+
+</div>
+
+<script>
+/* Vanta Background */
+VANTA.NET({
+    el: "#vanta",
+    mouseControls: true,
+    touchControls: true,
+    minHeight: 200.00,
+    minWidth: 200.00,
+    color: 0xff6b6b,
+    backgroundColor: 0x667eea,
+    points: 9.00,
+    maxDistance: 20.00,
+    spacing: 18.00
+});
+
+/* Controls */
+function goFullscreen() {
+    const iframe = document.getElementById("frame");
+    if (iframe.requestFullscreen) iframe.requestFullscreen();
+    else if (iframe.webkitRequestFullscreen) iframe.webkitRequestFullscreen();
+    else if (iframe.msRequestFullscreen) iframe.msRequestFullscreen();
+}
+
+function openNewTab() {
+    const iframe = document.getElementById("frame");
+    window.open(iframe.src, "_blank");
+}
+</script>
+
+</body>
+</html>
